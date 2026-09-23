@@ -1,6 +1,6 @@
 <?php
 
-use App\Livewire\Questions\QuestionIndex;
+use App\Http\Controllers\Pages\Questions\QuestionIndex;
 use App\Models\AcademicClass;
 use App\Models\Chapter;
 use App\Models\Question;
@@ -8,7 +8,7 @@ use App\Models\Subject;
 use App\Models\Topic;
 use App\Models\User;
 use Illuminate\Support\Str;
-use Livewire\Livewire;
+use Tests\Support\PageTest;
 
 it('students can only view active questions', function () {
     $student = User::factory()->create();
@@ -86,7 +86,7 @@ it('students can only view active questions', function () {
         'topic_id' => $topic->id,
     ]);
 
-    Livewire::actingAs($student)
+    PageTest::actingAs($student)
         ->test(QuestionIndex::class)
         ->assertSee('Active Question')
         ->assertDontSee('Pending Question');
@@ -95,7 +95,7 @@ it('students can only view active questions', function () {
 it('students cannot create questions', function () {
     $student = User::factory()->create();
 
-    Livewire::actingAs($student)
+    PageTest::actingAs($student)
         ->test(QuestionIndex::class)
         ->call('openModal')
         ->assertForbidden();
@@ -152,7 +152,7 @@ it('teacher cannot edit another teachers question', function () {
         'topic_id' => null,
     ]);
 
-    Livewire::actingAs($teacherB)
+    PageTest::actingAs($teacherB)
         ->test(QuestionIndex::class)
         ->call('editQuestion', $question->id)
         ->assertNotFound();

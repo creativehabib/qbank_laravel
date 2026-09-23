@@ -8,75 +8,75 @@ use App\Http\Controllers\Frontend\JobSolutionController;
 use App\Http\Controllers\Frontend\ToolsController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\PdfGeneratorController;
-use App\Livewire\AcademicClasses\ClassIndex;
-use App\Livewire\Admin\ModelTests\ModelTestCreate;
-use App\Livewire\Admin\ModelTests\ModelTestIndex;
-use App\Livewire\Admin\Organizations\OrganizationIndex;
-use App\Livewire\Admin\PackageManagement;
-use App\Livewire\Admin\PastExams\PastExamIndex;
-use App\Livewire\Admin\PastExams\PastExamManager;
-use App\Livewire\Admin\Settings\AiSetting;
-use App\Livewire\Admin\Settings\BrandingTheme;
-use App\Livewire\Admin\Settings\EmailSetting;
-use App\Livewire\Admin\Settings\FooterSetting;
-use App\Livewire\Admin\Settings\GeneralSetting;
-use App\Livewire\Admin\Settings\Index;
-use App\Livewire\Admin\Settings\Languages;
-use App\Livewire\Admin\Settings\MenuBuilder;
-use App\Livewire\Admin\Settings\PaymentSetting;
-use App\Livewire\Admin\Settings\SeoSetting;
-use App\Livewire\Admin\Settings\ThemeOptions;
-use App\Livewire\Admin\Settings\WebsiteTracking;
-use App\Livewire\Admin\WalletApprovalPanel;
-use App\Livewire\Chapters\ChapterIndex;
-use App\Livewire\ExamCategories\ExamCategoriesIndex;
-use App\Livewire\OMR\EvaluateOmr;
-use App\Livewire\OMR\ManageTokens;
-use App\Livewire\OMR\MapAnswers;
-use App\Livewire\OmrGenerator;
-use App\Livewire\OmrScanner;
-use App\Livewire\PermissionManager;
-use App\Livewire\Questions;
-use App\Livewire\Questions\BulkUpload;
-use App\Livewire\Questions\Create;
-use App\Livewire\Questions\Edit;
-use App\Livewire\RolePermissionManager;
-use App\Livewire\Students\BookmarkedQuestions;
-use App\Livewire\Students\CheckoutPage;
-use App\Livewire\Students\GoalSelection;
-use App\Livewire\Students\Leaderboard;
-use App\Livewire\Students\MistakeReview;
-use App\Livewire\Students\MockTestHistory;
-use App\Livewire\Students\MockTestResult;
-use App\Livewire\Students\ModelTests\ModelTestAttempt;
-use App\Livewire\Students\ModelTests\ModelTestResultPage;
-use App\Livewire\Students\PerformanceAnalytics;
-use App\Livewire\Students\PracticeIndex as StudentPracticeIndex;
-use App\Livewire\Students\PricingPage;
-use App\Livewire\Students\TakeMockTest;
-use App\Livewire\Subjects\SubjectIndex;
-use App\Livewire\SuperAdmin\Settings\ActivityLogs;
-use App\Livewire\SuperAdmin\Settings\Backups;
-use App\Livewire\SuperAdmin\Settings\CacheManagement;
-use App\Livewire\SuperAdmin\Settings\Htaccess;
-use App\Livewire\SuperAdmin\Settings\RobotsTxtSetting;
-use App\Livewire\SuperAdmin\Settings\SitemapSetting;
-use App\Livewire\SuperAdmin\Settings\SystemInformation;
-use App\Livewire\Tags\Index as TagIndex;
-use App\Livewire\Teacher\CreateQuestionSet;
-use App\Livewire\Teacher\GeneratedQuestionSetPage;
-use App\Livewire\Teacher\MyEarnings;
-use App\Livewire\Teacher\MyQuestionSets;
-use App\Livewire\Teacher\OrganizationInfo;
-use App\Livewire\Teacher\PackageCheckout;
-use App\Livewire\Teacher\PricingPlans;
-use App\Livewire\Teacher\QuestionGenerator;
-use App\Livewire\Teacher\QuestionPaper;
-use App\Livewire\Teacher\SubscriptionOverview;
-use App\Livewire\Teacher\ViewQuestions;
-use App\Livewire\Teacher\WalletTransactions;
-use App\Livewire\Topics\TopicIndex;
-use App\Livewire\UserRoleManagement;
+use App\Http\Controllers\Pages\AcademicClasses\ClassIndex;
+use App\Http\Controllers\Pages\Admin\ModelTests\ModelTestCreate;
+use App\Http\Controllers\Pages\Admin\ModelTests\ModelTestIndex;
+use App\Http\Controllers\Pages\Admin\Organizations\OrganizationIndex;
+use App\Http\Controllers\Pages\Admin\PackageManagement;
+use App\Http\Controllers\Pages\Admin\PastExams\PastExamIndex;
+use App\Http\Controllers\Pages\Admin\PastExams\PastExamManager;
+use App\Http\Controllers\Pages\Admin\Settings\AiSetting;
+use App\Http\Controllers\Pages\Admin\Settings\BrandingTheme;
+use App\Http\Controllers\Pages\Admin\Settings\EmailSetting;
+use App\Http\Controllers\Pages\Admin\Settings\FooterSetting;
+use App\Http\Controllers\Pages\Admin\Settings\GeneralSetting;
+use App\Http\Controllers\Pages\Admin\Settings\Index;
+use App\Http\Controllers\Pages\Admin\Settings\Languages;
+use App\Http\Controllers\Pages\Admin\Settings\MenuBuilder;
+use App\Http\Controllers\Pages\Admin\Settings\PaymentSetting;
+use App\Http\Controllers\Pages\Admin\Settings\SeoSetting;
+use App\Http\Controllers\Pages\Admin\Settings\ThemeOptions;
+use App\Http\Controllers\Pages\Admin\Settings\WebsiteTracking;
+use App\Http\Controllers\Pages\Admin\WalletApprovalPanel;
+use App\Http\Controllers\Pages\Chapters\ChapterIndex;
+use App\Http\Controllers\Pages\ExamCategories\ExamCategoriesIndex;
+use App\Http\Controllers\Pages\OMR\EvaluateOmr;
+use App\Http\Controllers\Pages\OMR\ManageTokens;
+use App\Http\Controllers\Pages\OMR\MapAnswers;
+use App\Http\Controllers\Pages\OmrGenerator;
+use App\Http\Controllers\Pages\OmrScanner;
+use App\Http\Controllers\Pages\PermissionManager;
+use App\Http\Controllers\Pages\Questions;
+use App\Http\Controllers\Pages\Questions\BulkUpload;
+use App\Http\Controllers\Pages\Questions\Create;
+use App\Http\Controllers\Pages\Questions\Edit;
+use App\Http\Controllers\Pages\RolePermissionManager;
+use App\Http\Controllers\Pages\Students\BookmarkedQuestions;
+use App\Http\Controllers\Pages\Students\CheckoutPage;
+use App\Http\Controllers\Pages\Students\GoalSelection;
+use App\Http\Controllers\Pages\Students\Leaderboard;
+use App\Http\Controllers\Pages\Students\MistakeReview;
+use App\Http\Controllers\Pages\Students\MockTestHistory;
+use App\Http\Controllers\Pages\Students\MockTestResult;
+use App\Http\Controllers\Pages\Students\ModelTests\ModelTestAttempt;
+use App\Http\Controllers\Pages\Students\ModelTests\ModelTestResultPage;
+use App\Http\Controllers\Pages\Students\PerformanceAnalytics;
+use App\Http\Controllers\Pages\Students\PracticeIndex as StudentPracticeIndex;
+use App\Http\Controllers\Pages\Students\PricingPage;
+use App\Http\Controllers\Pages\Students\TakeMockTest;
+use App\Http\Controllers\Pages\Subjects\SubjectIndex;
+use App\Http\Controllers\Pages\SuperAdmin\Settings\ActivityLogs;
+use App\Http\Controllers\Pages\SuperAdmin\Settings\Backups;
+use App\Http\Controllers\Pages\SuperAdmin\Settings\CacheManagement;
+use App\Http\Controllers\Pages\SuperAdmin\Settings\Htaccess;
+use App\Http\Controllers\Pages\SuperAdmin\Settings\RobotsTxtSetting;
+use App\Http\Controllers\Pages\SuperAdmin\Settings\SitemapSetting;
+use App\Http\Controllers\Pages\SuperAdmin\Settings\SystemInformation;
+use App\Http\Controllers\Pages\Tags\Index as TagIndex;
+use App\Http\Controllers\Pages\Teacher\CreateQuestionSet;
+use App\Http\Controllers\Pages\Teacher\GeneratedQuestionSetPage;
+use App\Http\Controllers\Pages\Teacher\MyEarnings;
+use App\Http\Controllers\Pages\Teacher\MyQuestionSets;
+use App\Http\Controllers\Pages\Teacher\OrganizationInfo;
+use App\Http\Controllers\Pages\Teacher\PackageCheckout;
+use App\Http\Controllers\Pages\Teacher\PricingPlans;
+use App\Http\Controllers\Pages\Teacher\QuestionGenerator;
+use App\Http\Controllers\Pages\Teacher\QuestionPaper;
+use App\Http\Controllers\Pages\Teacher\SubscriptionOverview;
+use App\Http\Controllers\Pages\Teacher\ViewQuestions;
+use App\Http\Controllers\Pages\Teacher\WalletTransactions;
+use App\Http\Controllers\Pages\Topics\TopicIndex;
+use App\Http\Controllers\Pages\UserRoleManagement;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Route;
@@ -113,42 +113,42 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::delete('/dashboard/question-sets/{questionSet}', [DashboardController::class, 'destroyQuestionSet'])->middleware('role:super_admin')->name('dashboard.question-sets.destroy');
 
     // --- প্রশ্ন ভান্ডার (Question Bank) Routes ---
-    Route::get('/questions', Questions::class)->name('questions.index');
-    Route::get('/questions/create', Create::class)->name('questions.create');
-    //    Route::get('/questions/{question}/show', App\Livewire\ShowQuestion::class)->name('questions.show');
-    Route::get('/questions/bulk-upload', BulkUpload::class)->name('questions.bulk-upload');
-    Route::get('/questions/{question}/edit', Edit::class)->name('questions.edit');
+    Route::match(['get', 'post'], '/questions', Questions::class)->name('questions.index');
+    Route::match(['get', 'post'], '/questions/create', Create::class)->name('questions.create');
+    //    Route::match(['get', 'post'], '/questions/{question}/show', App\Http\Controllers\Pages\ShowQuestion::class)->name('questions.show');
+    Route::match(['get', 'post'], '/questions/bulk-upload', BulkUpload::class)->name('questions.bulk-upload');
+    Route::match(['get', 'post'], '/questions/{question}/edit', Edit::class)->name('questions.edit');
 
     Route::middleware('permission:exam_categories.manage')->group(function (): void {
-        Route::get('/exam-categories', ExamCategoriesIndex::class)->name('exam-categories.index');
+        Route::match(['get', 'post'], '/exam-categories', ExamCategoriesIndex::class)->name('exam-categories.index');
     });
 
     Route::middleware('permission:academic_classes.manage')->group(function (): void {
-        Route::get('/academic-classes', ClassIndex::class)->name('academic-classes.index');
+        Route::match(['get', 'post'], '/academic-classes', ClassIndex::class)->name('academic-classes.index');
     });
 
     Route::middleware('permission:subjects.manage')->group(function (): void {
-        Route::get('/subjects', SubjectIndex::class)->name('subjects.index');
+        Route::match(['get', 'post'], '/subjects', SubjectIndex::class)->name('subjects.index');
     });
 
     Route::middleware('permission:chapters.manage')->group(function (): void {
-        Route::get('/chapters', ChapterIndex::class)->name('chapters.index');
+        Route::match(['get', 'post'], '/chapters', ChapterIndex::class)->name('chapters.index');
     });
 
     Route::middleware('permission:topics.manage')->group(function (): void {
-        Route::get('/topics', TopicIndex::class)->name('topics.index');
+        Route::match(['get', 'post'], '/topics', TopicIndex::class)->name('topics.index');
     });
 
     Route::middleware('permission:tags.create|tags.update|tags.delete')->group(function (): void {
-        Route::get('/tags', TagIndex::class)->name('tags.index');
+        Route::match(['get', 'post'], '/tags', TagIndex::class)->name('tags.index');
     });
 
     Route::middleware('permission:users.manage_roles')->group(function (): void {
-        Route::get('/users', UserRoleManagement::class)->name('users.index');
+        Route::match(['get', 'post'], '/users', UserRoleManagement::class)->name('users.index');
 
-        Route::get('/admin/theme-options', ThemeOptions::class)->name('admin.theme-options');
-        Route::get('/admin/wallet-approvals', WalletApprovalPanel::class)->name('admin.wallet-approvals');
-        Route::get('/admin/packages', PackageManagement::class)->name('admin.packages');
+        Route::match(['get', 'post'], '/admin/theme-options', ThemeOptions::class)->name('admin.theme-options');
+        Route::match(['get', 'post'], '/admin/wallet-approvals', WalletApprovalPanel::class)->name('admin.wallet-approvals');
+        Route::match(['get', 'post'], '/admin/packages', PackageManagement::class)->name('admin.packages');
         Route::get('/admin/theme-options/fonts', function () {
             return Cache::remember('theme-options-fonts', now()->addHours(12), function () {
                 $response = Http::timeout(20)->get('https://cdn.jsdelivr.net/gh/hasinhayder/google-fonts/fonts.json');
@@ -164,84 +164,84 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::middleware('role:admin|super_admin')->group(function (): void {
         // Model Tests (Admin created Mock Tests)
-        Route::get('/admin/model-tests', ModelTestIndex::class)->name('admin.model-tests.index');
-        Route::get('/admin/model-tests/create', ModelTestCreate::class)->name('admin.model-tests.create');
+        Route::match(['get', 'post'], '/admin/model-tests', ModelTestIndex::class)->name('admin.model-tests.index');
+        Route::match(['get', 'post'], '/admin/model-tests/create', ModelTestCreate::class)->name('admin.model-tests.create');
 
         // Organizations & Past Exams
-        Route::get('/admin/organizations', OrganizationIndex::class)->name('admin.organizations.index');
-        Route::get('/admin/past-exams', PastExamIndex::class)->name('admin.past-exams.index');
-        Route::get('/admin/past-exams/{pastExamId}/manage', PastExamManager::class)->name('admin.past-exams.manage');
+        Route::match(['get', 'post'], '/admin/organizations', OrganizationIndex::class)->name('admin.organizations.index');
+        Route::match(['get', 'post'], '/admin/past-exams', PastExamIndex::class)->name('admin.past-exams.index');
+        Route::match(['get', 'post'], '/admin/past-exams/{pastExamId}/manage', PastExamManager::class)->name('admin.past-exams.manage');
 
         // Admin Settings
-        Route::get('/admin/settings', Index::class)->name('admin.settings.index');
-        Route::get('/admin/settings/general', GeneralSetting::class)->name('admin.settings.general');
-        Route::get('/admin/settings/menus', MenuBuilder::class)->name('admin.settings.menus');
-        Route::get('/admin/settings/seo', SeoSetting::class)->name('admin.settings.seo');
-        Route::get('/admin/settings/footer', FooterSetting::class)->name('admin.settings.footer');
-        Route::get('/admin/settings/branding-theme', BrandingTheme::class)->name('admin.settings.branding');
-        Route::get('/admin/settings/email', EmailSetting::class)->name('admin.settings.email');
-        Route::get('/admin/settings/ai', AiSetting::class)->name('admin.settings.ai');
-        Route::get('/admin/settings/languages', Languages::class)->name('admin.settings.languages');
-        Route::get('/admin/settings/tracking', WebsiteTracking::class)->name('admin.settings.tracking');
-        Route::get('/admin/settings/payment', PaymentSetting::class)->name('admin.settings.payment');
+        Route::match(['get', 'post'], '/admin/settings', Index::class)->name('admin.settings.index');
+        Route::match(['get', 'post'], '/admin/settings/general', GeneralSetting::class)->name('admin.settings.general');
+        Route::match(['get', 'post'], '/admin/settings/menus', MenuBuilder::class)->name('admin.settings.menus');
+        Route::match(['get', 'post'], '/admin/settings/seo', SeoSetting::class)->name('admin.settings.seo');
+        Route::match(['get', 'post'], '/admin/settings/footer', FooterSetting::class)->name('admin.settings.footer');
+        Route::match(['get', 'post'], '/admin/settings/branding-theme', BrandingTheme::class)->name('admin.settings.branding');
+        Route::match(['get', 'post'], '/admin/settings/email', EmailSetting::class)->name('admin.settings.email');
+        Route::match(['get', 'post'], '/admin/settings/ai', AiSetting::class)->name('admin.settings.ai');
+        Route::match(['get', 'post'], '/admin/settings/languages', Languages::class)->name('admin.settings.languages');
+        Route::match(['get', 'post'], '/admin/settings/tracking', WebsiteTracking::class)->name('admin.settings.tracking');
+        Route::match(['get', 'post'], '/admin/settings/payment', PaymentSetting::class)->name('admin.settings.payment');
 
         // Super Admin Settings
-        Route::get('/superadmin/settings/sitemap', SitemapSetting::class)->middleware('role:super_admin')->name('superadmin.settings.sitemap');
-        Route::get('/superadmin/settings/robots-txt', RobotsTxtSetting::class)->middleware('role:super_admin')->name('superadmin.settings.robots-txt');
-        Route::get('/superadmin/settings/htaccess', Htaccess::class)->middleware('role:super_admin')->name('superadmin.settings.htaccess');
-        Route::get('/superadmin/settings/backups', Backups::class)->middleware('role:super_admin')->name('superadmin.settings.backups');
+        Route::match(['get', 'post'], '/superadmin/settings/sitemap', SitemapSetting::class)->middleware('role:super_admin')->name('superadmin.settings.sitemap');
+        Route::match(['get', 'post'], '/superadmin/settings/robots-txt', RobotsTxtSetting::class)->middleware('role:super_admin')->name('superadmin.settings.robots-txt');
+        Route::match(['get', 'post'], '/superadmin/settings/htaccess', Htaccess::class)->middleware('role:super_admin')->name('superadmin.settings.htaccess');
+        Route::match(['get', 'post'], '/superadmin/settings/backups', Backups::class)->middleware('role:super_admin')->name('superadmin.settings.backups');
         Route::get('/superadmin/settings/backups/download', [BackupDownloadController::class, 'download'])->middleware('role:super_admin')->name('superadmin.settings.backups.download');
-        Route::get('/superadmin/settings/cache', CacheManagement::class)->middleware('role:super_admin')->name('superadmin.settings.cache');
-        Route::get('/superadmin/settings/system-info', SystemInformation::class)->middleware('role:super_admin')->name('superadmin.settings.system-info');
-        Route::get('/superadmin/settings/activity-logs', ActivityLogs::class)->middleware('role:super_admin')->name('superadmin.settings.activity-logs');
+        Route::match(['get', 'post'], '/superadmin/settings/cache', CacheManagement::class)->middleware('role:super_admin')->name('superadmin.settings.cache');
+        Route::match(['get', 'post'], '/superadmin/settings/system-info', SystemInformation::class)->middleware('role:super_admin')->name('superadmin.settings.system-info');
+        Route::match(['get', 'post'], '/superadmin/settings/activity-logs', ActivityLogs::class)->middleware('role:super_admin')->name('superadmin.settings.activity-logs');
     });
 
     Route::middleware('permission:users.manage_permissions')->group(function (): void {
-        Route::get('/permissions', PermissionManager::class)->name('permissions.index');
-        Route::get('/roles-permissions', RolePermissionManager::class)->name('roles-permissions.index');
+        Route::match(['get', 'post'], '/permissions', PermissionManager::class)->name('permissions.index');
+        Route::match(['get', 'post'], '/roles-permissions', RolePermissionManager::class)->name('roles-permissions.index');
     });
 
     Route::get('/question-set/{id}/download-pdf', [PdfGeneratorController::class, 'downloadQuestionPaper'])
         ->name('pdf.download')
         ->middleware('auth');
 
-    Route::get('/teacher/question-set-create', CreateQuestionSet::class)->name('question.set-create');
-    Route::get('/teacher/create-question/generated-qset/{qset}', GeneratedQuestionSetPage::class)->name('qset.generated');
-    Route::get('/teacher/view-questions', ViewQuestions::class)->name('questions.view');
-    Route::get('/teacher/question-create', QuestionGenerator::class)->name('teacher.questions.generate');
-    Route::get('/teacher/my-question-sets', MyQuestionSets::class)->name('teacher.questions.index');
-    Route::get('/teacher/questions-paper', QuestionPaper::class)->name('questions.paper');
-    Route::get('/teacher/organization-info', OrganizationInfo::class)->middleware('role:teacher')->name('teacher.organization-info');
-    Route::get('/teacher/subscription', SubscriptionOverview::class)->middleware('role:teacher')->name('teacher.subscription');
-    Route::get('/teacher/pricing', PricingPlans::class)->middleware('role:teacher')->name('teacher.pricing');
-    Route::get('/teacher/pricing/checkout/{package}', PackageCheckout::class)->middleware('role:teacher')->name('teacher.pricing.checkout');
-    Route::get('/teacher/earnings', MyEarnings::class)->middleware('role:teacher')->name('teacher.earnings');
-    Route::get('/teacher/wallet', WalletTransactions::class)->middleware('role:teacher')->name('teacher.wallet');
+    Route::match(['get', 'post'], '/teacher/question-set-create', CreateQuestionSet::class)->name('question.set-create');
+    Route::match(['get', 'post'], '/teacher/create-question/generated-qset/{qset}', GeneratedQuestionSetPage::class)->name('qset.generated');
+    Route::match(['get', 'post'], '/teacher/view-questions', ViewQuestions::class)->name('questions.view');
+    Route::match(['get', 'post'], '/teacher/question-create', QuestionGenerator::class)->name('teacher.questions.generate');
+    Route::match(['get', 'post'], '/teacher/my-question-sets', MyQuestionSets::class)->name('teacher.questions.index');
+    Route::match(['get', 'post'], '/teacher/questions-paper', QuestionPaper::class)->name('questions.paper');
+    Route::match(['get', 'post'], '/teacher/organization-info', OrganizationInfo::class)->middleware('role:teacher')->name('teacher.organization-info');
+    Route::match(['get', 'post'], '/teacher/subscription', SubscriptionOverview::class)->middleware('role:teacher')->name('teacher.subscription');
+    Route::match(['get', 'post'], '/teacher/pricing', PricingPlans::class)->middleware('role:teacher')->name('teacher.pricing');
+    Route::match(['get', 'post'], '/teacher/pricing/checkout/{package}', PackageCheckout::class)->middleware('role:teacher')->name('teacher.pricing.checkout');
+    Route::match(['get', 'post'], '/teacher/earnings', MyEarnings::class)->middleware('role:teacher')->name('teacher.earnings');
+    Route::match(['get', 'post'], '/teacher/wallet', WalletTransactions::class)->middleware('role:teacher')->name('teacher.wallet');
 
-    Route::get('/student/goals', GoalSelection::class)->name('student.goals');
-    Route::get('/student/practice', StudentPracticeIndex::class)->name('students.practice.index');
-    Route::get('/student/bookmarks', BookmarkedQuestions::class)->name('student.bookmarks');
-    Route::get('/student/mock-test/{testId}', TakeMockTest::class)->name('student.mock-test.take');
-    Route::get('/student/mock-test/{testId}/result', MockTestResult::class)->name('student.mock-test.result');
+    Route::match(['get', 'post'], '/student/goals', GoalSelection::class)->name('student.goals');
+    Route::match(['get', 'post'], '/student/practice', StudentPracticeIndex::class)->name('students.practice.index');
+    Route::match(['get', 'post'], '/student/bookmarks', BookmarkedQuestions::class)->name('student.bookmarks');
+    Route::match(['get', 'post'], '/student/mock-test/{testId}', TakeMockTest::class)->name('student.mock-test.take');
+    Route::match(['get', 'post'], '/student/mock-test/{testId}/result', MockTestResult::class)->name('student.mock-test.result');
 
     // New Model Tests (Admin Created)
-    Route::get('/student/model-tests', App\Livewire\Students\ModelTests\ModelTestIndex::class)->name('student.model-tests.index');
-    Route::get('/student/model-tests/{modelTest}', ModelTestAttempt::class)->name('student.model-tests.attempt');
-    Route::get('/student/model-tests/result/{resultId}', ModelTestResultPage::class)->name('student.model-tests.result');
-    Route::get('/student/leaderboard', Leaderboard::class)->name('student.leaderboard');
-    Route::get('/student/mistakes', MistakeReview::class)->name('student.mistakes');
-    Route::get('/student/test-history', MockTestHistory::class)->name('student.test-history');
-    Route::get('/student/analytics', PerformanceAnalytics::class)->name('student.analytics');
-    Route::get('/student/pricing', PricingPage::class)->name('student.pricing');
-    Route::get('/student/checkout/{package_id}', CheckoutPage::class)->name('student.checkout');
-    Route::get('/student/omr-scanner', OmrScanner::class)->name('student.omr-scanner');
+    Route::match(['get', 'post'], '/student/model-tests', App\Http\Controllers\Pages\Students\ModelTests\ModelTestIndex::class)->name('student.model-tests.index');
+    Route::match(['get', 'post'], '/student/model-tests/{modelTest}', ModelTestAttempt::class)->name('student.model-tests.attempt');
+    Route::match(['get', 'post'], '/student/model-tests/result/{resultId}', ModelTestResultPage::class)->name('student.model-tests.result');
+    Route::match(['get', 'post'], '/student/leaderboard', Leaderboard::class)->name('student.leaderboard');
+    Route::match(['get', 'post'], '/student/mistakes', MistakeReview::class)->name('student.mistakes');
+    Route::match(['get', 'post'], '/student/test-history', MockTestHistory::class)->name('student.test-history');
+    Route::match(['get', 'post'], '/student/analytics', PerformanceAnalytics::class)->name('student.analytics');
+    Route::match(['get', 'post'], '/student/pricing', PricingPage::class)->name('student.pricing');
+    Route::match(['get', 'post'], '/student/checkout/{package_id}', CheckoutPage::class)->name('student.checkout');
+    Route::match(['get', 'post'], '/student/omr-scanner', OmrScanner::class)->name('student.omr-scanner');
 
-    Route::get('/tokens', ManageTokens::class)->name('tokens.list');
-    Route::get('/tokens/{token_id}/map', MapAnswers::class)->name('tokens.map-answers');
-    Route::get('/omr/evaluate', EvaluateOmr::class)->name('omr.evaluate');
+    Route::match(['get', 'post'], '/tokens', ManageTokens::class)->name('tokens.list');
+    Route::match(['get', 'post'], '/tokens/{token_id}/map', MapAnswers::class)->name('tokens.map-answers');
+    Route::match(['get', 'post'], '/omr/evaluate', EvaluateOmr::class)->name('omr.evaluate');
 
     Route::middleware('role:teacher|admin|super_admin')->group(function (): void {
-        Route::get('/omr-generator', OmrGenerator::class)->name('omr.generator');
+        Route::match(['get', 'post'], '/omr-generator', OmrGenerator::class)->name('omr.generator');
     });
 });
 

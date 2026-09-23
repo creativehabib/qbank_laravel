@@ -2,7 +2,7 @@
     <div class="flex flex-col sm:flex-row items-center justify-between px-5 py-4 border-t border-zinc-100 dark:border-zinc-800 text-sm text-zinc-500 dark:text-zinc-400">
         <div class="flex items-center gap-3">
             <div class="flex items-center gap-2">
-                <select wire:model.live="perPage" class="py-1 px-2 pr-8 border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 rounded-md text-sm focus:ring-accent focus:border-accent dark:text-white">
+                <select data-page-model.live="perPage" class="py-1 px-2 pr-8 border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-800 rounded-md text-sm focus:ring-accent focus:border-accent dark:text-white">
                     <option value="10">10</option>
                     <option value="25">25</option>
                     <option value="50">50</option>
@@ -10,9 +10,9 @@
                 </select>
                 <span>/ page</span>
             </div>
-            
+
             <span class="hidden sm:inline-block text-zinc-300 dark:text-zinc-600">&middot;</span>
-            
+
             <p>
                 Showing
                 <span class="font-medium text-zinc-900 dark:text-zinc-100">{{ $paginator->firstItem() }}</span>
@@ -31,7 +31,7 @@
                         Previous
                     </span>
                 @else
-                    <button wire:click="previousPage" wire:loading.attr="disabled" class="relative inline-flex items-center rounded-l-md px-3 py-2 text-sm text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-700 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700">
+                    <button data-page-click="previousPage" data-page-loading.attr="disabled" class="relative inline-flex items-center rounded-l-md px-3 py-2 text-sm text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-700 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700">
                         Previous
                     </button>
                 @endif
@@ -43,7 +43,7 @@
 
                 {{-- Next Page Link --}}
                 @if ($paginator->hasMorePages())
-                    <button wire:click="nextPage" wire:loading.attr="disabled" class="relative inline-flex items-center rounded-r-md px-3 py-2 text-sm text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-700 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700">
+                    <button data-page-click="nextPage" data-page-loading.attr="disabled" class="relative inline-flex items-center rounded-r-md px-3 py-2 text-sm text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:hover:bg-zinc-700 bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700">
                         Next
                     </button>
                 @else

@@ -1,6 +1,6 @@
 <?php
 
-use App\Livewire\Questions;
+use App\Http\Controllers\Pages\Questions;
 use App\Models\AcademicClass;
 use App\Models\Chapter;
 use App\Models\Question;
@@ -8,12 +8,12 @@ use App\Models\Subject;
 use App\Models\Topic;
 use App\Models\User;
 use Illuminate\Support\Str;
-use Livewire\Livewire;
+use Tests\Support\PageTest;
 
 it('shows create button when user has create permission', function () {
     $teacher = User::factory()->teacher()->create();
 
-    Livewire::actingAs($teacher)
+    PageTest::actingAs($teacher)
         ->test(Questions::class)
         ->assertSee('New Question');
 });
@@ -21,7 +21,7 @@ it('shows create button when user has create permission', function () {
 it('adds left padding to question selection checkboxes', function () {
     $admin = User::factory()->admin()->create();
 
-    Livewire::actingAs($admin)
+    PageTest::actingAs($admin)
         ->test(Questions::class)
         ->assertSeeHtml('class="w-16 pl-4"');
 });
@@ -29,7 +29,7 @@ it('adds left padding to question selection checkboxes', function () {
 it('hides create button when user does not have create permission', function () {
     $student = User::factory()->create();
 
-    Livewire::actingAs($student)
+    PageTest::actingAs($student)
         ->test(Questions::class)
         ->assertDontSee('New Question');
 });
@@ -136,7 +136,7 @@ it('activates taxonomy filters in class, subject, chapter sequence and shows que
         'user_id' => $admin->id,
     ]);
 
-    Livewire::actingAs($admin)
+    PageTest::actingAs($admin)
         ->test(Questions::class)
         ->set('academicClassId', (string) $class->id)
         ->assertSee('Mathematics')
@@ -194,7 +194,7 @@ it('shows a question’s options in the review modal', function () {
         'user_id' => $admin->id,
     ]);
 
-    Livewire::actingAs($admin)
+    PageTest::actingAs($admin)
         ->test(Questions::class)
         ->call('openQuestionModal', $question->id)
         ->assertSet('showQuestionModal', true)

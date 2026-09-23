@@ -1,7 +1,7 @@
 @props(['active' => false, 'icon' => 'tag', 'title', 'subtitle' => null, 'editAction' => null, 'deleteAction' => null, 'statusBadge' => null, 'toggleAction' => null, 'toggleState' => false])
 
-<div 
-    @if($editAction) x-on:click="$wire.{{ $editAction }}" @endif
+<div
+    @if($editAction) x-on:click="$page.{{ $editAction }}" @endif
     {{ $attributes->class([
     'group flex items-center justify-between py-3 px-4 transition-all border-b border-zinc-100 dark:border-zinc-800/50 hover:bg-zinc-50 dark:hover:bg-zinc-800/50 relative',
     'cursor-pointer' => $editAction,
@@ -17,10 +17,10 @@
         <div class="text-zinc-300 dark:text-zinc-600 cursor-grab hover:text-zinc-500 hidden sm:block">
             <svg class="size-4" fill="currentColor" viewBox="0 0 24 24"><path d="M8 6a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM8 12a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM8 18a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM16 6a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM16 12a2 2 0 1 1-4 0 2 2 0 0 1 4 0zM16 18a2 2 0 1 1-4 0 2 2 0 0 1 4 0z"/></svg>
         </div>
-        
+
         <!-- Icon -->
         <div class="size-9 rounded-lg bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center shrink-0 border border-zinc-200 dark:border-zinc-700">
-            <flux:icon :icon="$icon" class="size-4 text-zinc-500" />
+            <x-ui.icon :icon="$icon" class="size-4 text-zinc-500" />
         </div>
 
         <!-- Title & Subtitle -->
@@ -50,25 +50,25 @@
                 {{ $end }}
             </div>
         @endif
-        
+
         @if($toggleAction !== null)
-            <button x-on:click="$wire.{{ $toggleAction }}" type="button" class="relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 {{ $toggleState ? 'bg-accent' : 'bg-zinc-200 dark:bg-zinc-700' }}" role="switch" aria-checked="{{ $toggleState ? 'true' : 'false' }}">
+            <button x-on:click="$page.{{ $toggleAction }}" type="button" class="relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 {{ $toggleState ? 'bg-accent' : 'bg-zinc-200 dark:bg-zinc-700' }}" role="switch" aria-checked="{{ $toggleState ? 'true' : 'false' }}">
                 <span aria-hidden="true" class="pointer-events-none inline-block size-4 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out {{ $toggleState ? 'translate-x-4' : 'translate-x-0' }}"></span>
             </button>
         @endif
-        
+
         @if($editAction || $deleteAction)
-            <flux:dropdown position="bottom-end">
-                <flux:button variant="ghost" size="sm" icon="ellipsis-vertical" class="text-zinc-400" />
-                <flux:menu>
+            <x-ui.dropdown position="bottom-end">
+                <x-ui.button variant="ghost" size="sm" icon="ellipsis-vertical" class="text-zinc-400" />
+                <x-ui.menu>
                     @if($editAction)
-                        <flux:menu.item icon="pencil-square" x-on:click="$wire.{{ $editAction }}">Edit</flux:menu.item>
+                        <x-ui.menu.item icon="pencil-square" x-on:click="$page.{{ $editAction }}">Edit</x-ui.menu.item>
                     @endif
                     @if($deleteAction)
-                        <flux:menu.item icon="trash" variant="danger" x-on:click="$dispatch('modal-show', { name: 'delete-confirmation' }); window.pendingDeleteAction = () => $wire.{{ $deleteAction }}">Delete</flux:menu.item>
+                        <x-ui.menu.item icon="trash" variant="danger" x-on:click="$dispatch('modal-show', { name: 'delete-confirmation' }); window.pendingDeleteAction = () => $page.{{ $deleteAction }}">Delete</x-ui.menu.item>
                     @endif
-                </flux:menu>
-            </flux:dropdown>
+                </x-ui.menu>
+            </x-ui.dropdown>
         @endif
     </div>
 </div>

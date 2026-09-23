@@ -1,7 +1,7 @@
 <?php
 
-use App\Livewire\Questions;
-use App\Livewire\Questions\Create;
+use App\Http\Controllers\Pages\Questions;
+use App\Http\Controllers\Pages\Questions\Create;
 use App\Models\AcademicClass;
 use App\Models\Chapter;
 use App\Models\ExamCategory;
@@ -10,7 +10,7 @@ use App\Models\Subject;
 use App\Models\Topic;
 use App\Models\User;
 use Illuminate\Support\Str;
-use Livewire\Livewire;
+use Tests\Support\PageTest;
 
 function createQuestionDependencies(): array
 {
@@ -67,7 +67,7 @@ it('stores teacher created questions as pending', function () {
     $teacher = User::factory()->teacher()->create();
     [$class, $subject, $chapter, $topic, $examCategory] = createQuestionDependencies();
 
-    Livewire::actingAs($teacher)
+    PageTest::actingAs($teacher)
         ->test(Create::class)
         ->set('academic_class_id', $class->id)
         ->set('subject_id', $subject->id)
@@ -98,7 +98,7 @@ it('stores questions as active when creator has publish permission', function ()
     $teacher->givePermissionTo('questions.publish');
     [$class, $subject, $chapter, $topic, $examCategory] = createQuestionDependencies();
 
-    Livewire::actingAs($teacher)
+    PageTest::actingAs($teacher)
         ->test(Create::class)
         ->set('academic_class_id', $class->id)
         ->set('subject_id', $subject->id)
@@ -138,14 +138,14 @@ it('allows admin to toggle question status from the question list', function () 
         'user_id' => $admin->id,
     ]);
 
-    Livewire::actingAs($admin)
+    PageTest::actingAs($admin)
         ->test(Questions::class)
         ->call('toggleQuestionStatus', $question->id)
         ->assertHasNoErrors();
 
     expect($question->fresh()->status)->toBe('active');
 
-    Livewire::actingAs($admin)
+    PageTest::actingAs($admin)
         ->test(Questions::class)
         ->call('toggleQuestionStatus', $question->id)
         ->assertHasNoErrors();
@@ -199,7 +199,7 @@ it('filters questions by status and shows active/inactive counts', function () {
         'topic_id' => $topic->id,
     ]);
 
-    Livewire::actingAs($admin)
+    PageTest::actingAs($admin)
         ->test(Questions::class)
         ->assertSee('All (3)')
         ->assertSee('Published (1)')
@@ -227,7 +227,7 @@ it('rejects question creation when class and subject do not match', function () 
         'is_premium' => false,
     ]);
 
-    Livewire::actingAs($teacher)
+    PageTest::actingAs($teacher)
         ->test(Create::class)
         ->set('academic_class_id', $anotherClass->id)
         ->set('subject_id', $subject->id)

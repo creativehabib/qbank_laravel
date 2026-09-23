@@ -1,4 +1,4 @@
-<x-layouts::app :title="__('Dashboard')">
+<x-layouts.app :title="__('Dashboard')">
     <div class="flex h-full w-full flex-1 flex-col gap-6 p-2 lg:p-6">
         <div class="bg-gradient-to-r from-indigo-600 to-violet-600 rounded-3xl p-8 lg:p-10 text-white shadow-xl relative overflow-hidden">
             <div class="relative z-10">
@@ -46,7 +46,7 @@
                 </div>
             </div>
         </div>
-        
+
         <div class="flex-1 rounded-3xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 p-8 shadow-sm">
             <div class="flex items-center justify-between mb-6">
                 <h3 class="text-xl font-extrabold text-zinc-800 dark:text-zinc-100">Recent Updates</h3>
@@ -61,4 +61,4 @@
             </div>
         </div>
     </div>
-</x-layouts::app>
+</x-layouts.app>

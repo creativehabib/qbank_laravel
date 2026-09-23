@@ -45,7 +45,7 @@
                     $mobileMenu = \App\Models\Menu::with('parentItems')->where('location', 'mobile_drawer')->where('is_active', true)->first();
                     $mobileItems = $mobileMenu ? $mobileMenu->parentItems : collect();
                 @endphp
-                
+
                 @foreach($mobileItems as $index => $item)
                     @php
                         // Check if current URL matches the item's URL for active state
@@ -55,14 +55,14 @@
                         } elseif ($item->url !== '/' && $item->url !== '#' && request()->is(ltrim($item->url, '/') . '*')) {
                             $isActive = true;
                         }
-                        
+
                         // First item is active styled, remaining are default. Just matching the original layout slightly.
                         // We will use the $isActive state for highlighting.
                     @endphp
                     @if($item->url === '#search')
                     <button type="button" onclick="window.dispatchEvent(new CustomEvent('open-search'))" class="relative flex items-center gap-2 p-3 rounded-xl text-xs font-bold w-full text-left {{ $isActive ? 'bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400' : 'bg-slate-100 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300' }} {{ $index === count($mobileItems) - 1 && count($mobileItems) % 2 !== 0 ? 'col-span-2' : '' }}">
                     @else
-                    <a href="{{ str_starts_with($item->url, '#') || str_starts_with($item->url, 'http') ? $item->url : url($item->url) }}" 
+                    <a href="{{ str_starts_with($item->url, '#') || str_starts_with($item->url, 'http') ? $item->url : url($item->url) }}"
                        target="{{ $item->target }}"
                        class="relative flex items-center gap-2 p-3 rounded-xl text-xs font-bold {{ $isActive ? 'bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 dark:text-emerald-400' : 'bg-slate-100 dark:bg-slate-800/80 text-slate-700 dark:text-slate-300' }} {{ $index === count($mobileItems) - 1 && count($mobileItems) % 2 !== 0 ? 'col-span-2' : '' }}">
                     @endif
@@ -70,11 +70,11 @@
                             @if(str_contains($item->icon, '<svg'))
                                 <span class="w-4 h-4 shrink-0">{!! $item->icon !!}</span>
                             @else
-                                <flux:icon :icon="$item->icon" class="w-4 h-4 shrink-0" />
+                                <x-ui.icon :icon="$item->icon" class="w-4 h-4 shrink-0" />
                             @endif
                        @endif
                        {{ $item->title }}
-                       
+
                        @if($item->badge)
                            <span class="ml-auto inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-bold bg-rose-100 text-rose-800 dark:bg-rose-900/30 dark:text-rose-400">
                                {{ $item->badge }}

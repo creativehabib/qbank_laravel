@@ -18,18 +18,18 @@
                     <ol class="inline-flex items-center space-x-1 md:space-x-2">
                         <li class="inline-flex items-center">
                             <a href="/" class="hover:text-emerald-600 flex items-center gap-1">
-                                <flux:icon.home class="w-3 h-3" /> হোম
+                                <x-ui.icon.home class="w-3 h-3" /> হোম
                             </a>
                         </li>
                         <li>
                             <div class="flex items-center">
-                                <flux:icon.chevron-right class="w-3 h-3 mx-1" />
+                                <x-ui.icon.chevron-right class="w-3 h-3 mx-1" />
                                 <a href="{{ route('job-solutions.index') }}" class="hover:text-emerald-600">জব সলিউশন</a>
                             </div>
                         </li>
                         <li>
                             <div class="flex items-center">
-                                <flux:icon.chevron-right class="w-3 h-3 mx-1" />
+                                <x-ui.icon.chevron-right class="w-3 h-3 mx-1" />
                                 <span class="text-zinc-700 dark:text-zinc-300">{{ $organization->name }}</span>
                             </div>
                         </li>
@@ -43,7 +43,7 @@
                     @if($organization->logo_path)
                         <img src="{{ $organization->logo_url }}" alt="{{ $organization->name }}" class="w-full h-full object-contain rounded-xl">
                     @else
-                        <flux:icon.building-office-2 class="w-10 h-10 text-emerald-600" />
+                        <x-ui.icon.building-office-2 class="w-10 h-10 text-emerald-600" />
                     @endif
                 </div>
 
@@ -63,7 +63,7 @@
 
                         @if($organization->official_website)
                             <a href="{{ $organization->official_website }}" target="_blank" class="flex items-center gap-1.5 px-4 py-2 rounded-full border border-emerald-200 bg-emerald-50/50 hover:bg-emerald-50 text-emerald-700 dark:border-emerald-800 dark:bg-emerald-900/20 dark:text-emerald-400 dark:hover:bg-emerald-900/40 text-xs font-bold transition-colors">
-                                <flux:icon.arrow-top-right-on-square class="w-3.5 h-3.5" /> অফিসিয়াল ওয়েবসাইট &rarr;
+                                <x-ui.icon.arrow-top-right-on-square class="w-3.5 h-3.5" /> অফিসিয়াল ওয়েবসাইট &rarr;
                             </a>
                         @endif
                     </div>
@@ -75,7 +75,7 @@
                         @if($organization->description && strlen($organization->description) > 150)
                             <button @click="expanded = !expanded" class="text-emerald-600 hover:text-emerald-700 dark:hover:text-emerald-500 text-xs font-bold mt-1.5 flex items-center gap-1 transition-colors">
                                 <span x-text="expanded ? 'সংক্ষিপ্ত করুন' : 'আরও দেখুন'"></span>
-                                <flux:icon.chevron-down class="w-3 h-3 transition-transform" x-bind:class="expanded ? 'rotate-180' : ''" />
+                                <x-ui.icon.chevron-down class="w-3 h-3 transition-transform" x-bind:class="expanded ? 'rotate-180' : ''" />
                             </button>
                         @endif
                     </div>
@@ -121,7 +121,7 @@
                             <div class="flex items-center justify-between text-[11px]">
                                 <span class="text-zinc-500 font-medium">মোট প্রশ্ন: {{ $exam->questions_count }} টি</span>
                                 <span class="text-emerald-600 dark:text-emerald-400 font-bold flex items-center gap-1 hover:underline">
-                                সমাধান পড়ুন <flux:icon.arrow-right class="w-3 h-3" />
+                                সমাধান পড়ুন <x-ui.icon.arrow-right class="w-3 h-3" />
                             </span>
                             </div>
                         </div>
