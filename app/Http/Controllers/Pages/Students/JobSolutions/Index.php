@@ -13,7 +13,7 @@ use App\Models\Topic;
 
 class Index extends PageController
 {
-    use InteractsInteractsWithPagination;
+    use InteractsWithPagination;
 
     public $tab = 'exams'; // exams, topics, organizations
 

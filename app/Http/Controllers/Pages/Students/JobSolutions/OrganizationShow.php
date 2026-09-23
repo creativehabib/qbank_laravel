@@ -8,7 +8,7 @@ use App\Models\Organization;
 
 class OrganizationShow extends PageController
 {
-    use InteractsInteractsWithPagination;
+    use InteractsWithPagination;
 
     public $organization;
 

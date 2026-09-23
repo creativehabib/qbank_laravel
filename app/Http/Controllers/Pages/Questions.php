@@ -19,7 +19,7 @@ class Questions extends PageController
 {
     use AuthorizesRequests;
     use InteractsWithToasts;
-    use InteractsInteractsWithPagination;
+    use InteractsWithPagination;
 
     private const QUESTION_EARNING_AMOUNT = 10;
 

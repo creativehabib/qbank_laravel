@@ -23,7 +23,7 @@ class SubjectIndex extends PageController
     public $isCreating = false;
 
     use InteractsWithToasts;
-    use InteractsInteractsWithPagination;
+    use InteractsWithPagination;
 
     public $search = '';
 

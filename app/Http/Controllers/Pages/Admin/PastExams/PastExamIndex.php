@@ -10,7 +10,7 @@ use App\Models\PastExam;
 
 class PastExamIndex extends PageController
 {
-    use InteractsInteractsWithPagination;
+    use InteractsWithPagination;
 
     public $title = '';
 

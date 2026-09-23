@@ -8,7 +8,7 @@ use App\Models\ModelTest;
 
 class ModelTestIndex extends PageController
 {
-    use InteractsInteractsWithPagination;
+    use InteractsWithPagination;
 
     public function render()
     {

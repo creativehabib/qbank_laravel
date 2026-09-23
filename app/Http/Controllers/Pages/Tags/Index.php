@@ -24,7 +24,7 @@ class Index extends PageController
     public $sortField = 'default';
 
     use InteractsWithToasts;
-    use InteractsInteractsWithPagination;
+    use InteractsWithPagination;
 
     public string $name = '';
 

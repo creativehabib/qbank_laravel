@@ -14,7 +14,7 @@ use Illuminate\Validation\Rule;
 class UserRoleManagement extends PageController
 {
     use InteractsWithToasts;
-    use InteractsInteractsWithPagination;
+    use InteractsWithPagination;
 
     public string $search = '';
 

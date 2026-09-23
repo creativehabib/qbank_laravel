@@ -12,7 +12,7 @@ use Illuminate\Support\Str;
 
 class PastExamManager extends PageController
 {
-    use InteractsInteractsWithPagination;
+    use InteractsWithPagination;
 
     public $pastExamId;
 

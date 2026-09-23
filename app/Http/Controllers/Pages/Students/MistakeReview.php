@@ -13,7 +13,7 @@ class MistakeReview extends PageController
 {
     public $perPage = 10;
 
-    use InteractsInteractsWithPagination;
+    use InteractsWithPagination;
 
     public ?string $aiError = null;
 

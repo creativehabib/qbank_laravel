@@ -13,7 +13,7 @@ class BookmarkedQuestions extends PageController
 {
     public $perPage = 10;
 
-    use InteractsInteractsWithPagination;
+    use InteractsWithPagination;
 
     public function mount(): void
     {

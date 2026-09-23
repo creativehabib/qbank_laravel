@@ -13,7 +13,7 @@ use Illuminate\Support\Str;
 
 class ModelTestCreate extends PageController
 {
-    use InteractsInteractsWithPagination;
+    use InteractsWithPagination;
 
     public string $title = '';
 
