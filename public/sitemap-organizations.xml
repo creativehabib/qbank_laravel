@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url>
+    <loc>http://qbankbd.test/bangladesh-bank</loc>
+    <lastmod>2026-09-21T21:44:42+06:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>http://qbankbd.test/bpsc</loc>
+    <lastmod>2026-09-21T21:39:54+06:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>http://qbankbd.test/dhaka-university</loc>
+    <lastmod>2026-09-21T21:45:30+06:00</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+</urlset>

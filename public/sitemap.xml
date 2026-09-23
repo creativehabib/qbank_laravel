@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <sitemap>
+    <loc>http://qbankbd.test/sitemap-static.xml</loc>
+    <lastmod>2026-09-21T21:56:03+06:00</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>http://qbankbd.test/sitemap-tools.xml</loc>
+    <lastmod>2026-09-21T21:56:03+06:00</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>http://qbankbd.test/sitemap-organizations.xml</loc>
+    <lastmod>2026-09-21T21:56:03+06:00</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>http://qbankbd.test/sitemap-exams.xml</loc>
+    <lastmod>2026-09-21T21:56:03+06:00</lastmod>
+  </sitemap>
+  <sitemap>
+    <loc>http://qbankbd.test/sitemap-questions.xml</loc>
+    <lastmod>2026-09-21T21:56:03+06:00</lastmod>
+  </sitemap>
+</sitemapindex>

@@ -1,0 +1,49 @@
+<?php
+
+namespace App\Actions\Fortify;
+
+use App\Concerns\PasswordValidationRules;
+use App\Concerns\ProfileValidationRules;
+use App\Models\User;
+use Illuminate\Support\Facades\Validator;
+use Laravel\Fortify\Contracts\CreatesNewUsers;
+
+class CreateNewUser implements CreatesNewUsers
+{
+    use PasswordValidationRules, ProfileValidationRules;
+
+    /**
+     * Validate and create a newly registered user.
+     *
+     * @param  array<string, mixed>  $input
+     */
+    public function create(array $input): User
+    {
+        Validator::make($input, [
+            ...$this->profileRules(),
+            'password' => $this->passwordRules(),
+            'registration_role' => ['required', 'in:student,teacher,job_seeker'],
+            'organization_name' => ['nullable', 'string', 'max:255', 'required_if:registration_role,teacher'],
+            'organization_type' => ['nullable', 'string', 'max:255', 'required_if:registration_role,teacher'],
+            'organization_address' => ['nullable', 'string', 'max:1000', 'required_if:registration_role,teacher'],
+            'academic_class_id' => ['nullable', 'exists:academic_classes,id', 'required_if:registration_role,student'],
+            'department' => ['nullable', 'string', 'in:Science,Arts,Commerce'],
+        ])->validate();
+
+        $user = User::create([
+            'name' => $input['name'],
+            'email' => $input['email'],
+            'password' => $input['password'],
+            'registration_role' => $input['registration_role'],
+            'organization_name' => $input['registration_role'] === 'teacher' ? $input['organization_name'] : null,
+            'organization_type' => $input['registration_role'] === 'teacher' ? $input['organization_type'] : null,
+            'organization_address' => $input['registration_role'] === 'teacher' ? $input['organization_address'] : null,
+            'academic_class_id' => $input['registration_role'] === 'student' ? $input['academic_class_id'] : null,
+            'department' => $input['registration_role'] === 'student' ? ($input['department'] ?? null) : null,
+        ]);
+
+        $user->assignRole($input['registration_role']);
+
+        return $user;
+    }
+}

@@ -1,0 +1,353 @@
+<?php
+
+namespace App\Livewire\Questions;
+
+use App\Livewire\Traits\SlugValidationTrait;
+use App\Models\AcademicClass;
+use App\Models\Chapter;
+use App\Models\ExamCategory; // Image Upload এর জন্য
+use App\Models\Question;
+use App\Models\Subject;
+use App\Models\Tag;
+use App\Models\Topic;
+use Illuminate\Foundation\Auth\Access\AuthorizesRequests;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Schema;
+use Illuminate\Validation\Rule;
+use Livewire\Component;
+
+class Edit extends Component
+{
+    public $perPage = 10;
+
+    use AuthorizesRequests, SlugValidationTrait;
+
+    public Question $question;
+
+    public $subject_id;
+
+    public array $academic_class_ids = [];
+
+    public $chapter_id;
+
+    public $topic_id;
+
+    public $title;
+
+    public $description;
+
+    public $difficulty;
+
+    public $question_type = 'mcq';
+
+    public $marks = 1;
+
+    public $tagIds = [];
+
+    public $options = [];
+
+    public $cq = [];
+
+    public $slug;
+
+    public $exam_category_ids = [];
+
+    public $image; // নতুন ইমেজ আপলোডের জন্য
+
+    public function mount(Question $question)
+    {
+        abort_unless(auth()->user()?->hasPermission('questions.update'), 403);
+
+        if (auth()->user()?->isTeacher() && (int) $question->user_id !== (int) auth()->id()) {
+            abort(404);
+        }
+        $this->question = $question;
+
+        $this->subject_id = $question->subject_id;
+        $this->academic_class_ids = $question->academicClasses()->pluck('academic_classes.id')->map(fn ($id) => (string) $id)->toArray();
+        $this->chapter_id = $question->chapter_id;
+        $this->topic_id = $question->topic_id;
+        $this->title = $question->title;
+        $this->slug = $question->slug;
+        $this->description = $question->description;
+        $this->difficulty = $question->difficulty;
+        $this->question_type = $question->question_type ?? 'mcq';
+        $this->marks = $question->marks ?? 1;
+
+        $this->tagIds = $question->tags()->pluck('tags.id')->toArray();
+        $this->exam_category_ids = $question->examCategories()->pluck('exam_categories.id')->toArray();
+
+        $extraData = is_string($question->extra_content) ? json_decode($question->extra_content, true) : $question->extra_content;
+
+        if ($this->question_type === 'cq') {
+            $this->cq = is_array($extraData) && ! empty($extraData) ? $extraData : [];
+            if (empty($this->cq)) {
+                $this->setCqDefaults();
+            }
+            $this->resetToMcq();
+        } elseif ($this->question_type === 'mcq') {
+            if (is_array($extraData) && ! empty($extraData)) {
+                $this->options = $extraData;
+            } else {
+                $this->options = $question->options->toArray();
+            }
+            if (empty($this->options)) {
+                $this->resetToMcq();
+            }
+            $this->setCqDefaults();
+        } elseif (in_array($this->question_type, ['written', 'short'])) {
+            $this->image = $extraData['image'] ?? null;
+            $this->resetToMcq();
+            $this->setCqDefaults();
+        } else {
+            $this->resetToMcq();
+            $this->setCqDefaults();
+        }
+    }
+
+    private function resetToMcq(): void
+    {
+        $this->options = [
+            ['option_text' => '', 'is_correct' => false],
+            ['option_text' => '', 'is_correct' => false],
+            ['option_text' => '', 'is_correct' => false],
+            ['option_text' => '', 'is_correct' => false],
+        ];
+    }
+
+    // --- MCQ Options Methods ---
+    public function addOption(): void
+    {
+        $this->options[] = ['option_text' => '', 'is_correct' => false];
+        $this->dispatch('refresh-editors');
+    }
+
+    public function removeOption($index): void
+    {
+        if (count($this->options) > 2) {
+            unset($this->options[$index]);
+            $this->options = array_values($this->options);
+        }
+    }
+
+    // --- CQ Methods ---
+    private function setCqDefaults(): void
+    {
+        $this->cq = [
+            ['id' => uniqid(), 'label' => 'ক', 'text' => '', 'answer' => '', 'marks' => 1],
+            ['id' => uniqid(), 'label' => 'খ', 'text' => '', 'answer' => '', 'marks' => 2],
+            ['id' => uniqid(), 'label' => 'গ', 'text' => '', 'answer' => '', 'marks' => 3],
+            ['id' => uniqid(), 'label' => 'ঘ', 'text' => '', 'answer' => '', 'marks' => 4],
+        ];
+    }
+
+    public function addCqPart(): void
+    {
+        $labels = ['ক', 'খ', 'গ', 'ঘ', 'ঙ', 'চ', 'ছ', 'জ', 'ঝ', 'ঞ'];
+        $nextLabel = $labels[count($this->cq)] ?? '*';
+
+        $this->cq[] = ['id' => uniqid(), 'label' => $nextLabel, 'text' => '', 'answer' => '', 'marks' => 1];
+
+        $this->calculateCqMarks();
+        $this->dispatch('refresh-editors');
+    }
+
+    public function removeCqPart($index): void
+    {
+        unset($this->cq[$index]);
+        $this->cq = array_values($this->cq);
+        $this->calculateCqMarks();
+    }
+
+    public function calculateCqMarks(): void
+    {
+        $this->marks = array_sum(array_column($this->cq, 'marks'));
+    }
+
+    public function updated($property, $value): void
+    {
+        if ($this->question_type === 'cq' && str_starts_with($property, 'cq.') && str_ends_with($property, '.marks')) {
+            $this->calculateCqMarks();
+        }
+    }
+
+    // ইউজার স্লাগ টাইপ করার সাথে সাথে Livewire অটোমেটিক এটি চেক করবে
+    public function updatedSlug($value)
+    {
+        $this->validateOnly('slug', [
+            'slug' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('questions', 'slug')->ignore($this->question->id ?? null),
+            ],
+        ], [
+            'slug.unique' => 'এই স্লাগটি আগে থেকেই ব্যবহৃত হচ্ছে। দয়া করে একটু পরিবর্তন করুন।',
+        ]);
+    }
+
+    public function updatedQuestionType($value): void
+    {
+        if ($value === 'mcq') {
+            $this->marks = 1;
+            if (empty($this->options)) {
+                $this->resetToMcq();
+            }
+        } elseif ($value === 'cq') {
+            if (empty($this->cq)) {
+                $this->setCqDefaults();
+            }
+            $this->calculateCqMarks();
+            $this->options = [];
+        } else {
+            $this->marks = 2;
+            $this->options = [];
+        }
+        $this->dispatch('refresh-editors');
+    }
+
+    public function updatedSubjectId($value)
+    {
+        $this->chapter_id = null;
+        $this->topic_id = null;
+        $chapters = Chapter::where('subject_id', $value)->get()->map(fn ($s) => ['value' => $s->id, 'text' => $s->name])->all();
+        $this->dispatch('chaptersUpdated', chapters: $chapters);
+        $this->dispatch('topicsUpdated', topics: []);
+    }
+
+    public function updatedChapterId($value)
+    {
+        $this->topic_id = null;
+        $topics = $value ? Topic::where('chapter_id', $value)->get()->map(fn ($c) => ['value' => $c->id, 'text' => $c->name])->all() : [];
+        $this->dispatch('topicsUpdated', topics: $topics);
+    }
+
+    public function rules()
+    {
+        abort_unless(auth()->user()?->hasPermission('questions.update'), 403);
+
+        if (auth()->user()?->isTeacher() && (int) $this->question->user_id !== (int) auth()->id()) {
+            abort(404);
+        }
+
+        $rules = [
+            'academic_class_ids' => 'required|array', 'academic_class_ids.*' => 'exists:academic_classes,id',
+            'subject_id' => 'required|exists:subjects,id',
+            'chapter_id' => 'nullable|exists:chapters,id',
+            'topic_id' => 'nullable|exists:topics,id',
+            'title' => 'required|string',
+            'description' => 'nullable|string',
+            'difficulty' => 'required|in:easy,medium,hard',
+            'question_type' => 'required|in:mcq,cq,short,written', // written added
+            'marks' => 'required|numeric|min:0',
+            'tagIds' => 'nullable|array',
+            'exam_category_ids' => 'nullable|array', // Target Audience Optional
+            'exam_category_ids.*' => 'exists:exam_categories,id',
+            'slug' => ['required', 'string', 'max:255', Rule::unique('questions', 'slug')->ignore($this->question->id)],
+            'image' => 'nullable|string', // Image validation
+        ];
+
+        if ($this->question_type === 'mcq') {
+            $rules['options'] = 'required|array|min:2';
+            $rules['options.*.option_text'] = 'required|string';
+        }
+
+        // CQ parts validation
+        if ($this->question_type === 'cq') {
+            $rules['cq'] = 'required|array|min:1';
+            $rules['cq.*.label'] = 'required|string';
+            $rules['cq.*.text'] = 'required|string';
+            $rules['cq.*.marks'] = 'required|numeric|min:0';
+        }
+
+        return $rules;
+    }
+
+    public function save()
+    {
+        $currentUser = auth()->user();
+        abort_unless($currentUser?->hasPermission('questions.update'), 403);
+
+        $validated = $this->validate($this->rules());
+
+        $subject = Subject::query()
+            ->whereKey($validated['subject_id'])
+            ->whereHas('academicClasses', fn ($q) => $q->whereIn('academic_classes.id', $validated['academic_class_ids']))
+            ->first();
+
+        if (! $subject) {
+            $this->addError('subject_id', 'Please select a subject from the selected class.');
+
+            return;
+        }
+
+        DB::transaction(function () use ($subject) {
+            $extraData = null;
+
+            // টাইপ অনুযায়ী extra_content আপডেট
+            if ($this->question_type === 'cq') {
+                $extraData = $this->cq;
+            } elseif ($this->question_type === 'mcq') {
+                $extraData = $this->options;
+            } elseif (in_array($this->question_type, ['written', 'short'])) {
+                $extraData = ['image' => $this->image];
+            }
+
+            $this->question->update([
+                'subject_id' => $subject->id,
+                'chapter_id' => $this->chapter_id ?: null,
+                'topic_id' => $this->topic_id ?: null,
+                'title' => $this->title,
+                'slug' => $this->slug,
+                'description' => $this->description,
+                'difficulty' => $this->difficulty,
+                'question_type' => $this->question_type,
+                'marks' => (float) $this->marks == floor((float) $this->marks) ? (int) $this->marks : (float) $this->marks,
+                'extra_content' => $extraData,
+                'has_error' => false, // 🌟 প্রশ্ন সফলভাবে সংশোধন হওয়ায় এরর ফ্ল্যাগ রিলিজ করা হলো
+            ]);
+            if (! empty($this->academic_class_ids)) {
+                $this->question->academicClasses()->sync($this->academic_class_ids);
+            }
+
+            // Tags আপডেট
+            $tagIds = collect($this->tagIds)->map(fn ($tag) => is_numeric($tag) ? (int) $tag : Tag::firstOrCreate(['name' => $tag])->id)->toArray();
+            $this->question->tags()->sync($tagIds);
+
+            // Exam Categories আপডেট
+            if (! empty($this->exam_category_ids)) {
+                $this->question->examCategories()->sync($this->exam_category_ids);
+            }
+
+            // 🚀 ─── অটো-রিমুভাল লজিক ───
+            // এই প্রশ্ন সংক্রান্ত স্টুডেন্টদের করা সব ওপেন রিপোর্ট এক ক্লিকে সমাধান (Resolved) করে দেওয়া হলো
+            if (Schema::hasTable('question_reports')) {
+                DB::table('question_reports')
+                    ->where('question_id', $this->question->id)
+                    ->where('is_resolved', false)
+                    ->update([
+                        'is_resolved' => true,
+                        'updated_at' => now(),
+                    ]);
+            }
+        });
+
+        $route = auth()->user()->isTeacher() ? 'questions.index' : 'questions.index';
+
+        return redirect()->route($route)->with('success', 'Question updated successfully.');
+    }
+
+    public function render()
+    {
+        $layout = auth()->user()->isAdmin() ? 'layouts.admin' : 'layouts.panel';
+
+        return view('livewire.admin.questions.edit', [
+            'classes' => AcademicClass::query()->orderBy('name')->get(),
+            'subjects' => Subject::query()->orderBy('name')->get(),
+            'chapters' => Chapter::where('subject_id', $this->subject_id)->get(),
+            'topics' => Topic::where('chapter_id', $this->chapter_id)->get(),
+            'allTags' => Tag::all(),
+            'allExamCategories' => ExamCategory::all(), // টার্গেট ক্যাটাগরি পাঠানো হলো
+        ])->layout('layouts.app', ['title' => 'Edit Questions']);
+    }
+}

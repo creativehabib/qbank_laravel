@@ -1,0 +1,423 @@
+<?php
+
+namespace App\Livewire\Students;
+
+use App\Models\AcademicClass;
+use App\Models\Chapter;
+use App\Models\ExamCategory;
+use App\Models\MockTest;
+use App\Models\MockTestQuestion;
+use App\Models\Question;
+use App\Models\QuestionReport;
+use App\Models\Subject;
+use App\Models\User;
+use App\Services\AiService;
+use Illuminate\Contracts\View\View;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
+use Livewire\Component;
+use Livewire\WithPagination;
+
+class PracticeIndex extends Component
+{
+    public $perPage = 10;
+
+    use WithPagination;
+
+    public function loadMore(): void
+    {
+        $this->perPage += 10;
+    }
+
+    public string $level = 'classes';
+
+    public string $activeTab = 'fast';
+
+    public string $search = '';
+
+    public ?int $selectedClassId = null;
+
+    public ?int $selectedSubjectId = null;
+
+    public ?int $selectedChapterId = null;
+
+    public array $filterQuestionTypes = [];
+
+    public array $filterClasses = [];
+
+    public array $filterSubjects = [];
+
+    public array $filterExamCategories = [];
+
+    public array $filterTeachers = [];
+
+    public string $filterSearch = '';
+
+    public ?string $mockTestError = null;
+
+    public ?string $aiError = null;
+
+    // মক টেস্টের সেটিং কন্ট্রোল করার জন্য
+    public int $questionCount = 20; // ডিফল্ট ২০টি প্রশ্ন
+
+    public bool $hasNegativeMark = false; // ডিফল্ট নেগেটিভ মার্ক বন্ধ
+
+    public function mount(): void
+    {
+        abort_unless(auth()->user()?->isStudent() || auth()->user()?->isJobSeeker(), 403);
+    }
+
+    public function updated($property): void
+    {
+        if (str_starts_with($property, 'filter')) {
+            $this->evaluateFilterState();
+        }
+    }
+
+    private function evaluateFilterState(): void
+    {
+        $hasFilters = ! empty($this->filterQuestionTypes)
+            || ! empty($this->filterClasses)
+            || ! empty($this->filterSubjects)
+            || ! empty($this->filterExamCategories)
+            || ! empty($this->filterTeachers)
+            || filled($this->filterSearch);
+
+        if ($hasFilters) {
+            if ($this->level !== 'filtered-questions') {
+                $this->level = 'filtered-questions';
+            }
+        } else {
+            if ($this->level === 'filtered-questions') {
+                $this->level = 'questions';
+            }
+        }
+
+        $this->resetPage();
+        $this->dispatch('practice-content-updated');
+    }
+
+    public function resetFilter(): void
+    {
+        $this->filterQuestionTypes = [];
+        $this->filterClasses = [];
+        $this->filterSubjects = [];
+        $this->filterExamCategories = [];
+        $this->filterTeachers = [];
+        $this->filterSearch = '';
+
+        if ($this->level === 'filtered-questions') {
+            $this->level = 'questions';
+        }
+
+        $this->resetPage();
+        $this->dispatch('practice-content-updated');
+    }
+
+    // --- Navigation Methods ---
+
+    public function openClass(int $classId): void
+    {
+        $isValidClass = AcademicClass::query()->whereKey($classId)->where('is_active', true)->exists();
+        if ($isValidClass) {
+            $this->selectedClassId = $classId;
+            $this->selectedSubjectId = null;
+            $this->selectedChapterId = null;
+            $this->level = 'subjects';
+            $this->search = '';
+            $this->resetPage();
+            $this->dispatch('practice-content-updated');
+        }
+    }
+
+    public function openSubject(int $subjectId): void
+    {
+        $isValidSubject = Subject::query()->whereKey($subjectId)->where('academic_class_id', $this->selectedClassId)->where('is_active', true)->exists();
+        if ($isValidSubject) {
+            $this->selectedSubjectId = $subjectId;
+            $this->selectedChapterId = null;
+            $this->level = 'chapters';
+            $this->search = '';
+            $this->resetPage();
+            $this->dispatch('practice-content-updated');
+        }
+    }
+
+    public function startSubjectPractice(int $subjectId): void
+    {
+        $isValidSubject = Subject::query()->whereKey($subjectId)->where('academic_class_id', $this->selectedClassId)->where('is_active', true)->exists();
+        if ($isValidSubject) {
+            $this->selectedSubjectId = $subjectId;
+            $this->selectedChapterId = null;
+            $this->level = 'questions';
+            $this->search = '';
+            $this->resetPage();
+            $this->dispatch('practice-content-updated');
+        }
+    }
+
+    public function openChapter(int $chapterId): void
+    {
+        $isValidChapter = Chapter::query()->whereKey($chapterId)->where('subject_id', $this->selectedSubjectId)->where('is_active', true)->exists();
+        if ($isValidChapter) {
+            $this->selectedChapterId = $chapterId;
+            $this->level = 'questions';
+            $this->search = '';
+            $this->resetPage();
+            $this->dispatch('practice-content-updated');
+        }
+    }
+
+    public function generateAiExplanation($questionId): void
+    {
+        $this->aiError = null;
+        session()->flash('last_question_id', $questionId); // UI এরর দেখানোর জন্য
+
+        try {
+            $question = Question::findOrFail($questionId);
+
+            // 🌟 সার্ভিস ক্লাস কল করে ম্যাজিক! 🌟
+            $geminiService = new AiService;
+            $geminiService->generateAndSaveExplanation($question);
+
+            // সফল হলে UI রিফ্রেশ
+            $this->dispatch('practice-content-updated');
+
+        } catch (\Exception $e) {
+            // সার্ভিস ক্লাস থেকে পাঠানো এরর এখানে সেট হয়ে যাবে
+            $this->aiError = $e->getMessage();
+        }
+    }
+
+    public function startMockTest(): void
+    {
+        $this->mockTestError = null;
+
+        if (! $this->selectedClassId) {
+            $this->mockTestError = 'দয়া করে অন্তত একটি ক্যাটাগরি বা শ্রেণি নির্বাচন করুন।';
+
+            return;
+        }
+
+        $query = Question::query()
+            ->where('question_type', 'mcq')
+            ->where('status', 'active');
+
+        if ($this->selectedSubjectId) {
+            $query->where('subject_id', $this->selectedSubjectId);
+        } else {
+            $query->where('academic_class_id', $this->selectedClassId);
+        }
+
+        $questions = $query->inRandomOrder()
+            ->limit((int) $this->questionCount)
+            ->get();
+
+        if ($questions->isEmpty()) {
+            $this->mockTestError = 'দুঃখিত! এই ক্যাটাগরিতে মক টেস্ট তৈরি করার মতো কোনো প্রশ্ন পাওয়া যায়নি।';
+
+            return;
+        }
+
+        $mockTest = MockTest::create([
+            'user_id' => auth()->id(),
+            'academic_class_id' => $this->selectedClassId,
+            'subject_id' => $this->selectedSubjectId,
+            'total_questions' => $questions->count(),
+            'duration_minutes' => (int) $this->questionCount,
+            'status' => 'started',
+            'started_at' => now(),
+        ]);
+
+        $mockTestQuestionsData = $questions->map(function ($question) use ($mockTest) {
+            return [
+                'mock_test_id' => $mockTest->id,
+                'question_id' => $question->id,
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        })->toArray();
+
+        MockTestQuestion::insert($mockTestQuestionsData);
+
+        $this->redirectRoute('student.mock-test.take', ['testId' => $mockTest->id], navigate: true);
+    }
+
+    public function back(): void
+    {
+        if ($this->level === 'filtered-questions') {
+            $this->level = 'questions';
+        } elseif ($this->level === 'questions') {
+            if ($this->selectedChapterId !== null) {
+                $this->selectedChapterId = null;
+                $this->level = 'chapters';
+            } else {
+                $this->selectedSubjectId = null;
+                $this->level = 'subjects';
+            }
+        } elseif ($this->level === 'chapters') {
+            $this->selectedSubjectId = null;
+            $this->selectedChapterId = null;
+            $this->level = 'subjects';
+        } elseif ($this->level === 'subjects') {
+            $this->selectedClassId = null;
+            $this->selectedSubjectId = null;
+            $this->selectedChapterId = null;
+            $this->level = 'classes';
+        }
+
+        $this->search = '';
+        $this->resetPage();
+        $this->dispatch('practice-content-updated');
+    }
+
+    // --- Dynamic Actions (Scalable Approach) ---
+
+    public function toggleLike(int $questionId): void
+    {
+        $question = Question::findOrFail($questionId);
+        $toggled = $question->likes()->toggle(auth()->id());
+
+        if (count($toggled['attached']) > 0) {
+            $question->increment('likes_count');
+        } elseif (count($toggled['detached']) > 0) {
+            $question->decrement('likes_count');
+        }
+    }
+
+    public function toggleBookmark(int $questionId): void
+    {
+        $question = Question::findOrFail($questionId);
+        $toggled = $question->bookmarks()->toggle(auth()->id());
+
+        if (count($toggled['attached']) > 0) {
+            $question->increment('bookmarks_count');
+        } elseif (count($toggled['detached']) > 0) {
+            $question->decrement('bookmarks_count');
+        }
+    }
+
+    // 🚀 স্টুডেন্ট প্যানেল থেকে প্রশ্নের ভুল রিপোর্ট সাবমিট করার চূড়ান্ত মেথড
+    public function reportQuestionError(int $questionId, string $reason, string $description = ''): void
+    {
+        $question = Question::findOrFail($questionId);
+
+        // ১. মূল প্রশ্ন টেবিলে এরর ফ্ল্যাগ ট্র্রিগার করা (এডমিন অ্যালার্টের জন্য)
+        if (\Schema::hasColumn('questions', 'has_error')) {
+            $question->update([
+                'has_error' => true,
+            ]);
+        }
+
+        // ২. ডেডিকেটেড রিপোর্টে সমস্ত তথ্য ডাটাবেজে সংরক্ষণ করা
+        QuestionReport::create([
+            'user_id' => auth()->id(),
+            'question_id' => $questionId,
+            'reason' => $reason,
+            'description' => $description ?: null,
+        ]);
+
+        // টোস্ট বা নোটিফিকেশন ডিসপ্যাচ
+        $this->dispatch('notify', ['type' => 'success', 'message' => 'রিপোর্ট সফলভাবে জমা হয়েছে! এডমিন দ্রুত এটি যাচাই করবেন।']);
+    }
+
+    // --- Data Fetching ---
+
+    protected function getFilterOptions(): array
+    {
+        return [
+            'classes' => AcademicClass::where('is_active', true)->orderBy('name')->pluck('name', 'id')->toArray(),
+            'subjects' => Subject::where('is_active', true)->orderBy('name')->pluck('name', 'id')->toArray(),
+            'exam_categories' => ExamCategory::orderBy('name')->pluck('name', 'id')->toArray(),
+            'teachers' => User::role('teacher')->orderBy('name')->pluck('name', 'id')->toArray(),
+        ];
+    }
+
+    protected function classes(): Collection
+    {
+        return AcademicClass::query()->where('is_active', true)
+            ->withCount(['questions as mcq_questions_count' => fn (Builder $q) => $q->where('question_type', 'mcq')])
+            ->orderBy('name')->get(['id', 'name']);
+    }
+
+    protected function subjects(): Collection
+    {
+        if ($this->selectedClassId === null) {
+            return collect();
+        }
+
+        return Subject::query()->where('academic_class_id', $this->selectedClassId)->where('is_active', true)
+            ->when(filled($this->search), fn (Builder $q) => $q->where('name', 'like', '%'.$this->search.'%'))
+            ->withCount(['questions as mcq_questions_count' => fn (Builder $q) => $q->where('question_type', 'mcq')])
+            ->orderBy('name')->get(['id', 'name', 'slug']);
+    }
+
+    protected function chapters(): Collection
+    {
+        if ($this->selectedSubjectId === null) {
+            return collect();
+        }
+
+        return Chapter::query()->where('subject_id', $this->selectedSubjectId)->where('is_active', true)
+            ->when(filled($this->search), fn (Builder $q) => $q->where('name', 'like', '%'.$this->search.'%'))
+            ->withCount(['questions as mcq_questions_count' => fn (Builder $q) => $q->where('question_type', 'mcq')])
+            ->orderBy('name')->get(['id', 'name', 'slug']);
+    }
+
+    protected function latestQuestions(): LengthAwarePaginator
+    {
+        if ($this->selectedSubjectId === null && $this->selectedChapterId === null) {
+            return new LengthAwarePaginator([], 0, 20, 1);
+        }
+
+        return Question::query()
+            ->where('question_type', 'mcq')->where('status', 'active')
+            ->when($this->selectedChapterId !== null, fn (Builder $q) => $q->where('chapter_id', $this->selectedChapterId))
+            ->when($this->selectedChapterId === null && $this->selectedSubjectId !== null, fn (Builder $q) => $q->where('subject_id', $this->selectedSubjectId))
+            ->with(['academicClass:id,name', 'subject:id,name', 'chapter:id,name', 'examCategories:id,name', 'tags:id,name'])
+            ->withExists([
+                'likes as is_liked' => fn (Builder $q) => $q->where('user_id', auth()->id()),
+                'bookmarks as is_bookmarked' => fn (Builder $q) => $q->where('user_id', auth()->id()),
+            ])
+            ->latest('id')->paginate($this->perPage);
+    }
+
+    protected function filteredQuestions(): LengthAwarePaginator
+    {
+        return Question::query()
+            ->when(! empty($this->filterQuestionTypes), fn (Builder $query) => $query->whereIn('question_type', $this->filterQuestionTypes))
+            ->where('status', 'active')
+            ->when(! empty($this->filterClasses), fn (Builder $query) => $query->whereIn('academic_class_id', $this->filterClasses))
+            ->when(! empty($this->filterSubjects), fn (Builder $query) => $query->whereIn('subject_id', $this->filterSubjects))
+            ->when(! empty($this->filterExamCategories), fn (Builder $query) => $query->whereHas('examCategories', fn ($q) => $q->whereIn('exam_category_id', $this->filterExamCategories)))
+            ->when(! empty($this->filterTeachers), fn (Builder $query) => $query->whereIn('user_id', $this->filterTeachers))
+            ->when(filled($this->filterSearch), fn (Builder $query) => $query->where('title', 'like', '%'.$this->filterSearch.'%'))
+            ->with(['academicClass:id,name', 'subject:id,name', 'chapter:id,name', 'examCategories:id,name', 'tags:id,name'])
+            ->withExists([
+                'likes as is_liked' => fn (Builder $q) => $q->where('user_id', auth()->id()),
+                'bookmarks as is_bookmarked' => fn (Builder $q) => $q->where('user_id', auth()->id()),
+            ])
+            ->latest('id')
+            ->paginate($this->perPage);
+    }
+
+    public function render(): View
+    {
+        $selectedClassName = AcademicClass::query()->whereKey($this->selectedClassId)->value('name');
+        $selectedSubjectName = Subject::query()->whereKey($this->selectedSubjectId)->value('name');
+        $selectedChapterName = Chapter::query()->whereKey($this->selectedChapterId)->value('name');
+
+        return view('livewire.students.practice-index', [
+            'classes' => $this->classes(),
+            'subjects' => $this->subjects(),
+            'chapters' => $this->chapters(),
+            'latestQuestions' => $this->latestQuestions(),
+            'filteredQuestions' => $this->filteredQuestions(),
+            'filterOptions' => $this->getFilterOptions(),
+            'selectedClassName' => $selectedClassName,
+            'selectedSubjectName' => $selectedSubjectName,
+            'selectedChapterName' => $selectedChapterName,
+        ])->layout('layouts.app', ['title' => 'Practice']);
+    }
+}

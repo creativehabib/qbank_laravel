@@ -1,0 +1,47 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+
+class Subject extends Model
+{
+    use \App\Traits\LogsActivity, HasFactory, HasUuids;
+
+    protected $guarded = [];
+
+    public function uniqueIds(): array
+    {
+        return ['uuid'];
+    }
+
+    protected $casts = [
+        'is_active' => 'boolean',
+        'is_premium' => 'boolean',
+    ];
+
+    // রিলেশনশিপ: এই সাবজেক্টটি কোন ক্লাসের
+    public function academicClasses()
+    {
+        return $this->belongsToMany(AcademicClass::class, 'academic_class_subject')->withPivot('custom_name')->withTimestamps();
+    }
+
+    // Legacy relation for compatibility (if needed temporarily)
+    public function academicClass()
+    {
+        return $this->belongsTo(AcademicClass::class);
+    }
+
+    // রিলেশনশিপ: একটি সাবজেক্টের অধীনে অনেক চ্যাপ্টার থাকে
+    public function chapters()
+    {
+        return $this->hasMany(Chapter::class);
+    }
+
+    public function questions()
+    {
+        return $this->hasMany(Question::class);
+    }
+}

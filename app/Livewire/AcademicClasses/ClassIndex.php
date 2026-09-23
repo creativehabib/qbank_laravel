@@ -1,0 +1,567 @@
+<?php
+
+namespace App\Livewire\AcademicClasses;
+
+use App\Livewire\Traits\InteractsWithFluxToasts;
+use App\Models\AcademicClass;
+use App\Models\Chapter;
+use App\Models\Question;
+use App\Models\Subject;
+use App\Models\Topic;
+use Illuminate\Contracts\View\View;
+use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
+use Livewire\Component;
+
+class ClassIndex extends Component
+{
+    public $toggleTargetId = null;
+
+    public $toggleTargetName = '';
+
+    public $toggleTargetState = false;
+
+    public $showToggleModal = false;
+
+    public $isCreating = false;
+
+    public $perPage = 10;
+
+    public $sortField = 'default';
+
+    use InteractsWithFluxToasts;
+
+    public string $classSearch = '';
+
+    public string $subjectSearch = '';
+
+    public string $chapterSearch = '';
+
+    public string $topicSearch = '';
+
+    public bool $showClassModal = false;
+
+    public bool $showSubjectModal = false;
+
+    public bool $showChapterModal = false;
+
+    public bool $showTopicModal = false;
+
+    public ?int $editingClassId = null;
+
+    public $class_parent_id = null;
+
+    public string $class_name = '';
+
+    public $class_slug = '';
+
+    public ?string $class_description = null;
+
+    public bool $class_is_active = true;
+
+    public bool $class_is_premium = false;
+
+    public ?int $editingSubjectId = null;
+
+    public ?int $subject_academic_class_id = null;
+
+    public string $subject_name = '';
+
+    public ?string $subject_code = null;
+
+    public ?string $subject_description = null;
+
+    public bool $subject_is_active = true;
+
+    public bool $subject_is_premium = false;
+
+    public ?int $editingChapterId = null;
+
+    public ?int $chapter_subject_id = null;
+
+    public string $chapter_name = '';
+
+    public ?string $chapter_no = null;
+
+    public ?string $chapter_description = null;
+
+    public bool $chapter_is_active = true;
+
+    public bool $chapter_is_premium = false;
+
+    public ?int $editingTopicId = null;
+
+    public ?int $topic_chapter_id = null;
+
+    public string $topic_name = '';
+
+    public ?string $topic_description = null;
+
+    public bool $topic_is_active = true;
+
+    public bool $topic_is_premium = false;
+
+    public function openClassModal(): void
+    {
+        $this->resetClassForm();
+        $this->resetValidation();
+        $this->showClassModal = true;
+    }
+
+    public function closeClassModal(): void
+    {
+        $this->showClassModal = false;
+    }
+
+    public function editClass(int $id): void
+    {
+        $this->isCreating = false;
+        $academicClass = AcademicClass::query()->withCount('questions')->findOrFail($id);
+
+        $this->editingClassId = $academicClass->id;
+        $this->class_parent_id = $academicClass->parent_id;
+        $this->class_name = $academicClass->name;
+        $this->class_slug = $academicClass->slug;
+        $this->class_description = $academicClass->description;
+        $this->class_is_active = (bool) $academicClass->is_active;
+        $this->class_is_premium = (bool) $academicClass->is_premium;
+
+        $this->resetValidation();
+        $this->showClassModal = true;
+    }
+
+    public function saveClass(): void
+    {
+        if (empty($this->class_slug)) {
+            $this->class_slug = preg_replace('/\s+/u', '-', trim($this->class_name));
+        }
+
+        $validated = $this->validate([
+            'class_parent_id' => ['nullable', 'exists:academic_classes,id'],
+            'class_name' => ['required', 'string', 'max:255'],
+            'class_slug' => ['required', 'string', 'max:255', Rule::unique('academic_classes', 'slug')->ignore($this->editingClassId)],
+            'class_description' => ['nullable', 'string'],
+            'class_is_active' => ['boolean'],
+            'class_is_premium' => ['boolean'],
+        ]);
+
+        $payload = [
+            'parent_id' => $validated['class_parent_id'] ?? null,
+            'name' => $validated['class_name'],
+            'slug' => preg_replace('/\s+/u', '-', trim($validated['class_slug'])),
+            'description' => $validated['class_description'],
+            'is_active' => $validated['class_is_active'],
+            'is_premium' => $validated['class_is_premium'],
+        ];
+
+        if ($this->editingClassId !== null) {
+            AcademicClass::query()->withCount('questions')->whereKey($this->editingClassId)->update($payload);
+            $message = 'Academic class updated successfully.';
+        } else {
+            $payload['uuid'] = (string) Str::uuid();
+            $payload['order_sequence'] = (AcademicClass::query()->withCount('questions')->max('order_sequence') ?? 0) + 1;
+            AcademicClass::query()->withCount('questions')->create($payload);
+            $message = 'Academic class created successfully.';
+        }
+
+        $this->showClassModal = false;
+        $this->toastSuccess($message);
+        $this->resetClassForm();
+    }
+
+    public function deleteClass(int $id): void
+    {
+        $class = AcademicClass::query()->withCount('questions')->find($id);
+        if ($class) {
+            $hasQuestions = $class->questions()->exists();
+            if ($hasQuestions) {
+                $this->toastWarning('This class is attached to questions, so it cannot be deleted. You can deactivate it instead.', 'Cannot Delete');
+
+                return;
+            }
+            $class->delete();
+            $this->toastDanger('Academic class deleted successfully.', 'Deleted');
+        }
+    }
+
+    public function openSubjectModal(): void
+    {
+        $this->resetSubjectForm();
+        $this->resetValidation();
+        $this->showSubjectModal = true;
+    }
+
+    public function closeSubjectModal(): void
+    {
+        $this->showSubjectModal = false;
+    }
+
+    public function editSubject(int $id): void
+    {
+        $subject = Subject::query()->findOrFail($id);
+
+        $this->editingSubjectId = $subject->id;
+        $this->subject_academic_class_id = $subject->academic_class_id;
+        $this->subject_name = $subject->name;
+        $this->subject_code = $subject->subject_code;
+        $this->subject_description = $subject->description;
+        $this->subject_is_active = (bool) $subject->is_active;
+        $this->subject_is_premium = (bool) $subject->is_premium;
+
+        $this->resetValidation();
+        $this->showSubjectModal = true;
+    }
+
+    public function saveSubject(): void
+    {
+        $validated = $this->validate([
+            'subject_academic_class_id' => ['required', 'exists:academic_classes,id'],
+            'subject_name' => ['required', 'string', 'max:255'],
+            'subject_code' => ['nullable', 'string', 'max:50'],
+            'subject_description' => ['nullable', 'string'],
+            'subject_is_active' => ['boolean'],
+            'subject_is_premium' => ['boolean'],
+        ]);
+
+        $payload = [
+            'academic_class_id' => $validated['subject_academic_class_id'],
+            'name' => $validated['subject_name'],
+            'subject_code' => $validated['subject_code'],
+            'slug' => $this->uniqueSlug(Subject::class, $validated['subject_name'], $this->editingSubjectId),
+            'description' => $validated['subject_description'],
+            'is_active' => $validated['subject_is_active'],
+            'is_premium' => $validated['subject_is_premium'],
+        ];
+
+        if ($this->editingSubjectId !== null) {
+            Subject::query()->whereKey($this->editingSubjectId)->update($payload);
+            $message = 'Subject updated successfully.';
+        } else {
+            $payload['uuid'] = (string) Str::uuid();
+            $payload['order_sequence'] = (Subject::query()->max('order_sequence') ?? 0) + 1;
+            Subject::query()->create($payload);
+            $message = 'Subject created successfully.';
+        }
+
+        $this->showSubjectModal = false;
+        $this->toastSuccess($message);
+        $this->resetSubjectForm();
+    }
+
+    public function deleteSubject(int $id): void
+    {
+        $subject = Subject::query()->find($id);
+        if ($subject) {
+            $hasQuestions = Question::where('subject_id', $id)->exists();
+            if ($hasQuestions) {
+                $this->toastWarning('This subject is attached to questions, so it cannot be deleted. You can deactivate it instead.', 'Cannot Delete');
+
+                return;
+            }
+            $subject->delete();
+            $this->toastDanger('Subject deleted successfully.', 'Delete');
+        }
+    }
+
+    public function openChapterModal(): void
+    {
+        $this->resetChapterForm();
+        $this->resetValidation();
+        $this->showChapterModal = true;
+    }
+
+    public function closeChapterModal(): void
+    {
+        $this->showChapterModal = false;
+    }
+
+    public function editChapter(int $id): void
+    {
+        $chapter = Chapter::query()->findOrFail($id);
+
+        $this->editingChapterId = $chapter->id;
+        $this->chapter_subject_id = $chapter->subject_id;
+        $this->chapter_name = $chapter->name;
+        $this->chapter_no = $chapter->chapter_no;
+        $this->chapter_description = $chapter->description;
+        $this->chapter_is_active = (bool) $chapter->is_active;
+        $this->chapter_is_premium = (bool) $chapter->is_premium;
+
+        $this->resetValidation();
+        $this->showChapterModal = true;
+    }
+
+    public function saveChapter(): void
+    {
+        $validated = $this->validate([
+            'chapter_subject_id' => ['required', 'exists:subjects,id'],
+            'chapter_name' => ['required', 'string', 'max:255'],
+            'chapter_no' => ['nullable', 'string', 'max:50'],
+            'chapter_description' => ['nullable', 'string'],
+            'chapter_is_active' => ['boolean'],
+            'chapter_is_premium' => ['boolean'],
+        ]);
+
+        $payload = [
+            'subject_id' => $validated['chapter_subject_id'],
+            'name' => $validated['chapter_name'],
+            'chapter_no' => $validated['chapter_no'],
+            'slug' => $this->uniqueSlug(Chapter::class, $validated['chapter_name'], $this->editingChapterId),
+            'description' => $validated['chapter_description'],
+            'is_active' => $validated['chapter_is_active'],
+            'is_premium' => $validated['chapter_is_premium'],
+        ];
+
+        if ($this->editingChapterId !== null) {
+            Chapter::query()->whereKey($this->editingChapterId)->update($payload);
+            $message = 'Chapter updated successfully.';
+        } else {
+            $payload['uuid'] = (string) Str::uuid();
+            $payload['order_sequence'] = (Chapter::query()->max('order_sequence') ?? 0) + 1;
+            Chapter::query()->create($payload);
+            $message = 'Chapter created successfully.';
+        }
+
+        $this->showChapterModal = false;
+        $this->toastSuccess($message);
+        $this->resetChapterForm();
+    }
+
+    public function deleteChapter(int $id): void
+    {
+        $chapter = Chapter::query()->find($id);
+        if ($chapter) {
+            $hasQuestions = Question::where('chapter_id', $id)->exists();
+            if ($hasQuestions) {
+                $this->toastWarning('This chapter is attached to questions, so it cannot be deleted. You can deactivate it instead.', 'Cannot Delete');
+
+                return;
+            }
+            $chapter->delete();
+            $this->toastDanger('Chapter deleted successfully.', 'Delete');
+        }
+    }
+
+    public function openTopicModal(): void
+    {
+        $this->resetTopicForm();
+        $this->resetValidation();
+        $this->showTopicModal = true;
+    }
+
+    public function closeTopicModal(): void
+    {
+        $this->showTopicModal = false;
+    }
+
+    public function editTopic(int $id): void
+    {
+        $topic = Topic::query()->findOrFail($id);
+
+        $this->editingTopicId = $topic->id;
+        $this->topic_chapter_id = $topic->chapter_id;
+        $this->topic_name = $topic->name;
+        $this->topic_description = $topic->description;
+        $this->topic_is_active = (bool) $topic->is_active;
+        $this->topic_is_premium = (bool) $topic->is_premium;
+
+        $this->resetValidation();
+        $this->showTopicModal = true;
+    }
+
+    public function saveTopic(): void
+    {
+        $validated = $this->validate([
+            'topic_chapter_id' => ['required', 'exists:chapters,id'],
+            'topic_name' => ['required', 'string', 'max:255'],
+            'topic_description' => ['nullable', 'string'],
+            'topic_is_active' => ['boolean'],
+            'topic_is_premium' => ['boolean'],
+        ]);
+
+        $payload = [
+            'chapter_id' => $validated['topic_chapter_id'],
+            'name' => $validated['topic_name'],
+            'slug' => $this->uniqueSlug(Topic::class, $validated['topic_name'], $this->editingTopicId),
+            'description' => $validated['topic_description'],
+            'is_active' => $validated['topic_is_active'],
+            'is_premium' => $validated['topic_is_premium'],
+        ];
+
+        if ($this->editingTopicId !== null) {
+            Topic::query()->whereKey($this->editingTopicId)->update($payload);
+            $message = 'Topic updated successfully.';
+        } else {
+            $payload['uuid'] = (string) Str::uuid();
+            $payload['order_sequence'] = (Topic::query()->max('order_sequence') ?? 0) + 1;
+            Topic::query()->create($payload);
+            $message = 'Topic created successfully.';
+        }
+
+        $this->showTopicModal = false;
+        $this->toastSuccess($message);
+        $this->resetTopicForm();
+    }
+
+    public function deleteTopic(int $id): void
+    {
+        $topic = Topic::query()->find($id);
+        if ($topic) {
+            $hasQuestions = Question::where('topic_id', $id)->exists();
+            if ($hasQuestions) {
+                $this->toastWarning('This topic is attached to questions, so it cannot be deleted. You can deactivate it instead.', 'Cannot Delete');
+
+                return;
+            }
+            $topic->delete();
+            $this->toastDanger('Topic deleted successfully.', 'Delete');
+        }
+    }
+
+    public function toggleActive($id)
+    {
+        $item = AcademicClass::findOrFail($id);
+        $this->toggleTargetId = $id;
+        $this->toggleTargetName = $item->name;
+        $this->toggleTargetState = ! $item->is_active;
+
+        // Open modal via Flux
+        $this->showToggleModal = true;
+        $this->dispatch('modal-show', name: 'toggle-confirm');
+    }
+
+    public function performToggle()
+    {
+        if (! $this->toggleTargetId) {
+            return;
+        }
+
+        $item = AcademicClass::findOrFail($this->toggleTargetId);
+        $item->is_active = $this->toggleTargetState;
+        $item->save();
+
+        $this->toastSuccess('Status updated successfully.');
+        $this->showToggleModal = false;
+        $this->dispatch('modal-close', name: 'toggle-confirm');
+        $this->toggleTargetId = null;
+    }
+
+    public function create()
+    {
+        $this->resetClassForm();
+        $this->isCreating = true;
+    }
+
+    public function render(): View
+    {
+        return view('livewire.academic-classes.class-index', [
+            'academicClasses' => AcademicClass::query()->with(['parent'])->withCount('questions')
+                ->when($this->classSearch, fn ($query) => $query->where('name', 'like', '%'.$this->classSearch.'%'))
+                ->latest()
+                ->paginate($this->perPage),
+            'subjects' => Subject::query()
+                ->with('academicClass')
+                ->when($this->subjectSearch, function ($query): void {
+                    $query->where('name', 'like', '%'.$this->subjectSearch.'%')
+                        ->orWhere('subject_code', 'like', '%'.$this->subjectSearch.'%');
+                })
+                ->latest()
+                ->get(),
+            'chapters' => Chapter::query()
+                ->with('subject')
+                ->when($this->chapterSearch, fn ($query) => $query->where('name', 'like', '%'.$this->chapterSearch.'%'))
+                ->latest()
+                ->get(),
+            'topics' => Topic::query()
+                ->with('chapter.subject')
+                ->when($this->topicSearch, fn ($query) => $query->where('name', 'like', '%'.$this->topicSearch.'%'))
+                ->latest()
+                ->get(),
+            'allClasses' => AcademicClass::query()->with(['parent'])->withCount('questions')->when($this->sortField === 'name_asc', fn ($q) => $q->orderBy('name', 'asc'))
+                ->when($this->sortField === 'name_desc', fn ($q) => $q->orderBy('name', 'desc'))
+                ->when($this->sortField === 'default', fn ($q) => $q->latest())->get(),
+            'allSubjects' => Subject::query()->when($this->sortField === 'name_asc', fn ($q) => $q->orderBy('name', 'asc'))
+                ->when($this->sortField === 'name_desc', fn ($q) => $q->orderBy('name', 'desc'))
+                ->when($this->sortField === 'default', fn ($q) => $q->latest())->get(),
+            'allChapters' => Chapter::query()->when($this->sortField === 'name_asc', fn ($q) => $q->orderBy('name', 'asc'))
+                ->when($this->sortField === 'name_desc', fn ($q) => $q->orderBy('name', 'desc'))
+                ->when($this->sortField === 'default', fn ($q) => $q->latest())->get(),
+        ])->layout('layouts.app', ['title' => 'Academic Content CRUD']);
+    }
+
+    public function updated($property, $value)
+    {
+        if ($property === 'class_name' && empty($this->editingClassId)) {
+            $this->class_slug = preg_replace('/\s+/u', '-', trim($value));
+        }
+    }
+
+    public function resetClassForm(): void
+    {
+        $this->isCreating = false;
+        $this->editingClassId = null;
+        $this->class_parent_id = null;
+        $this->class_name = '';
+        $this->class_slug = '';
+        $this->class_description = null;
+        $this->class_is_active = true;
+        $this->class_is_premium = false;
+        $this->showClassModal = false;
+        $this->resetValidation();
+    }
+
+    public function resetSubjectForm(): void
+    {
+        $this->editingSubjectId = null;
+        $this->subject_academic_class_id = null;
+        $this->subject_name = '';
+        $this->subject_code = null;
+        $this->subject_description = null;
+        $this->subject_is_active = true;
+        $this->subject_is_premium = false;
+        $this->showSubjectModal = false;
+        $this->resetValidation();
+    }
+
+    public function resetChapterForm(): void
+    {
+        $this->editingChapterId = null;
+        $this->chapter_subject_id = null;
+        $this->chapter_name = '';
+        $this->chapter_no = null;
+        $this->chapter_description = null;
+        $this->chapter_is_active = true;
+        $this->chapter_is_premium = false;
+        $this->showChapterModal = false;
+        $this->resetValidation();
+    }
+
+    public function resetTopicForm(): void
+    {
+        $this->editingTopicId = null;
+        $this->topic_chapter_id = null;
+        $this->topic_name = '';
+        $this->topic_description = null;
+        $this->topic_is_active = true;
+        $this->topic_is_premium = false;
+        $this->showTopicModal = false;
+        $this->resetValidation();
+    }
+
+    private function uniqueSlug(string $modelClass, string $name, ?int $ignoreId = null): string
+    {
+        $baseSlug = Str::slug($name);
+        $slug = $baseSlug;
+        $counter = 1;
+
+        while ($modelClass::query()
+            ->where('slug', $slug)
+            ->when($ignoreId !== null, fn ($query) => $query->where('id', '!=', $ignoreId))
+            ->exists()) {
+            $slug = $baseSlug.'-'.$counter;
+            $counter++;
+        }
+
+        return $slug;
+    }
+}
