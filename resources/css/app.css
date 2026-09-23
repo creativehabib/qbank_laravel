@@ -1,13 +1,9 @@
 @import 'tailwindcss';
 @import "tom-select/dist/css/tom-select.css";
-@import '../../vendor/livewire/flux/dist/flux.css';
 @import "@fortawesome/fontawesome-free/css/all.min.css";
 
 @source '../views';
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
-@source '../../vendor/livewire/flux-pro/stubs/**/*.blade.php';
-@source '../../vendor/livewire/flux/stubs/**/*.blade.php';
-@source '../../vendor/creativehabib/media-manager/resources/views/**/*.blade.php';
 
 @custom-variant dark (&:where(.dark, .dark *));
 
@@ -67,17 +63,17 @@
     }
 }
 
-[data-flux-field]:not(ui-radio, ui-checkbox) {
+[data-ui-field]:not(ui-radio, ui-checkbox) {
     @apply grid gap-2;
 }
 
-[data-flux-label] {
+[data-ui-label] {
     @apply !mb-0 !leading-tight;
 }
 
-input:focus[data-flux-control],
-textarea:focus[data-flux-control],
-select:focus[data-flux-control] {
+input:focus[data-ui-control],
+textarea:focus[data-ui-control],
+select:focus[data-ui-control] {
     @apply outline-hidden ring-2 ring-accent ring-offset-2 ring-offset-accent-foreground;
 }
 
@@ -117,19 +113,19 @@ select:focus[data-flux-control] {
         @apply text-slate-100;
         background-color: var(--app-dark-bg);
     }
-    .dark flux\:main, .dark [data-flux-main] {
+    .dark ui\:main, .dark [data-ui-main] {
         @apply bg-transparent;
     }
-    .dark flux\:header, .dark [data-flux-header] {
+    .dark ui\:header, .dark [data-ui-header] {
         @apply backdrop-blur;
         border-color: var(--app-dark-border);
         background-color: color-mix(in srgb, var(--app-dark-panel) 95%, transparent);
     }
-    .dark flux\:sidebar, .dark [data-flux-sidebar] {
+    .dark ui\:sidebar, .dark [data-ui-sidebar] {
         border-color: var(--app-dark-border);
         background-color: var(--app-dark-panel);
     }
-    .dark [data-flux-sidebar] [data-current] {
+    .dark [data-ui-sidebar] [data-current] {
         background-color: var(--app-dark-active-bg);
         color: var(--app-dark-active-text);
     }

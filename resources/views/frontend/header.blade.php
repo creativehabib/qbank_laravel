@@ -148,7 +148,7 @@
                                 @if(str_contains($item->icon, '<svg'))
                                     <span class="w-4 h-4 mr-1 inline-block">{!! $item->icon !!}</span>
                                 @else
-                                    <flux:icon :icon="$item->icon" class="w-4 h-4 mr-1 inline-block" />
+                                    <x-ui.icon :icon="$item->icon" class="w-4 h-4 mr-1 inline-block" />
                                 @endif
                             @endif
                             {{ $item->title }}

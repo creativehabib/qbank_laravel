@@ -10,12 +10,12 @@
     <div x-data="examPageData()" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-6 space-y-5 sm:space-y-6 space-y-6 pb-12">
         <!-- Breadcrumb -->
         <div class="flex items-center gap-1.5 md:gap-2 text-[11px] md:text-[13px] text-zinc-500 font-medium w-full">
-            <a href="/" class="shrink-0 hover:text-emerald-600 transition-colors flex items-center gap-1"><flux:icon.home class="w-3 h-3 md:w-3.5 md:h-3.5" /> হোম</a>
-            <flux:icon.chevron-right class="shrink-0 w-2.5 h-2.5 md:w-3 md:h-3" />
+            <a href="/" class="shrink-0 hover:text-emerald-600 transition-colors flex items-center gap-1"><x-ui.icon.home class="w-3 h-3 md:w-3.5 md:h-3.5" /> হোম</a>
+            <x-ui.icon.chevron-right class="shrink-0 w-2.5 h-2.5 md:w-3 md:h-3" />
             <a href="{{ route('job-solutions.index') }}" class="shrink-0 hover:text-emerald-600 transition-colors whitespace-nowrap">জব সল্যুশন</a>
-            <flux:icon.chevron-right class="shrink-0 w-2.5 h-2.5 md:w-3 md:h-3" />
+            <x-ui.icon.chevron-right class="shrink-0 w-2.5 h-2.5 md:w-3 md:h-3" />
             <a href="{{ route('organization.show', $organization->slug) }}" class="truncate hover:text-emerald-600 transition-colors min-w-[50px] md:min-w-0 max-w-[90px] sm:max-w-[150px] md:max-w-none">{{ $organization->name }}</a>
-            <flux:icon.chevron-right class="shrink-0 w-2.5 h-2.5 md:w-3 md:h-3" />
+            <x-ui.icon.chevron-right class="shrink-0 w-2.5 h-2.5 md:w-3 md:h-3" />
             <span class="truncate text-zinc-900 dark:text-zinc-100 min-w-[50px] md:min-w-0 max-w-[90px] sm:max-w-[150px] md:max-w-none">{{ $exam->title }}</span>
         </div>
 
@@ -30,7 +30,7 @@
                                 @if($organization->logo_path)
                                     <img src="{{ $organization->logo_url }}" alt="Logo" class="w-3 h-3 object-contain">
                                 @else
-                                    <flux:icon.building-office-2 class="w-3 h-3" />
+                                    <x-ui.icon.building-office-2 class="w-3 h-3" />
                                 @endif
                                 {{ $organization->name }}
                             </span>
@@ -59,7 +59,7 @@
 
                         <button @click="expanded = !expanded" class="text-emerald-600 text-sm font-bold flex items-center gap-1 hover:text-emerald-700 transition-colors">
                             <span x-text="expanded ? 'সংক্ষিপ্ত করুন' : 'আরও দেখুন'"></span>
-                            <flux:icon.chevron-down class="w-3 h-3 transition-transform" x-bind:class="expanded ? 'rotate-180' : ''" />
+                            <x-ui.icon.chevron-down class="w-3 h-3 transition-transform" x-bind:class="expanded ? 'rotate-180' : ''" />
                         </button>
                     </div>
                 </div>
@@ -85,7 +85,7 @@
                             <span class="text-2xl font-bold">{{ $exam->duration ?? '-' }}</span>
                         </div>
                         <span class="flex items-center gap-1 text-[11px] font-medium text-zinc-500 dark:text-zinc-400 mt-2">
-                                <flux:icon.clock class="w-3 h-3" /> সময় (মি.)
+                                <x-ui.icon.clock class="w-3 h-3" /> সময় (মি.)
                             </span>
                     </div>
                 </div>
@@ -93,19 +93,19 @@
                 <!-- Stats Pills (Mobile - Horizontal) -->
                 <div class="flex md:hidden flex-wrap items-center justify-center gap-2 w-full mt-6">
                     <div class="flex shrink-0 whitespace-nowrap items-center gap-1.5 px-3 py-1.5 rounded-full bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 shadow-sm">
-                        <flux:icon.document-text class="w-3.5 h-3.5 text-orange-500" />
+                        <x-ui.icon.document-text class="w-3.5 h-3.5 text-orange-500" />
                         <span class="text-[11px] font-medium text-zinc-500 dark:text-zinc-400">পূর্ণমান:</span>
                         <span class="text-[11px] font-bold text-zinc-900 dark:text-zinc-100">{{ $exam->total_marks ?? '-' }}</span>
                     </div>
 
                     <div class="flex shrink-0 whitespace-nowrap items-center gap-1.5 px-3 py-1.5 rounded-full bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 shadow-sm">
-                        <flux:icon.question-mark-circle class="w-3.5 h-3.5 text-emerald-500" />
+                        <x-ui.icon.question-mark-circle class="w-3.5 h-3.5 text-emerald-500" />
                         <span class="text-[11px] font-medium text-zinc-500 dark:text-zinc-400">প্রশ্ন:</span>
                         <span class="text-[11px] font-bold text-zinc-900 dark:text-zinc-100">{{ $totalQuestions }}</span>
                     </div>
 
                     <div x-show="isQuizMode" style="display: none;" class="flex shrink-0 whitespace-nowrap items-center gap-1.5 px-3 py-1.5 rounded-full bg-white dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 shadow-sm transition-all">
-                        <flux:icon.clock class="w-3.5 h-3.5 text-sky-500" />
+                        <x-ui.icon.clock class="w-3.5 h-3.5 text-sky-500" />
                         <span class="text-[11px] font-medium text-zinc-500 dark:text-zinc-400">সময়:</span>
                         <span class="text-[11px] font-bold text-zinc-900 dark:text-zinc-100">{{ $exam->duration ?? '-' }}মি.</span>
                     </div>
@@ -143,19 +143,19 @@
                         <button @click="showAnswers = !showAnswers"
                                 :class="showAnswers ? 'border-emerald-300 text-emerald-600 bg-emerald-50 dark:border-emerald-700 dark:bg-emerald-900/30' : 'border-zinc-200 text-zinc-500 dark:border-zinc-700 dark:text-zinc-400'"
                                 class="flex items-center gap-1.5 px-4 py-1.5 bg-white dark:bg-zinc-900 border rounded-full text-[13px] font-bold transition-colors shadow-sm">
-                            <div x-show="showAnswers" class="flex items-center gap-1.5"><flux:icon.eye class="w-4 h-4" /> <span class="md:hidden">উত্তর: চালু</span><span class="hidden md:inline">উত্তর লুকান</span></div>
-                            <div x-show="!showAnswers" style="display: none;" class="flex items-center gap-1.5"><flux:icon.eye-slash class="w-4 h-4" /> <span class="md:hidden">উত্তর: বন্ধ</span><span class="hidden md:inline">উত্তর দেখান</span></div>
+                            <div x-show="showAnswers" class="flex items-center gap-1.5"><x-ui.icon.eye class="w-4 h-4" /> <span class="md:hidden">উত্তর: চালু</span><span class="hidden md:inline">উত্তর লুকান</span></div>
+                            <div x-show="!showAnswers" style="display: none;" class="flex items-center gap-1.5"><x-ui.icon.eye-slash class="w-4 h-4" /> <span class="md:hidden">উত্তর: বন্ধ</span><span class="hidden md:inline">উত্তর দেখান</span></div>
                         </button>
                         <button @click="showExplanations = !showExplanations"
                                 :class="showExplanations ? 'border-indigo-300 text-indigo-600 bg-indigo-50 dark:border-indigo-700 dark:bg-indigo-900/30' : 'border-zinc-200 text-zinc-500 dark:border-zinc-700 dark:text-zinc-400'"
                                 class="flex items-center gap-1.5 px-4 py-1.5 bg-white dark:bg-zinc-900 border rounded-full text-[13px] font-bold transition-colors shadow-sm">
-                            <div x-show="showExplanations" style="display: none;" class="flex items-center gap-1.5"><flux:icon.light-bulb class="w-4 h-4" /> <span class="md:hidden">ব্যাখ্যা: চালু</span><span class="hidden md:inline">ব্যাখ্যা লুকান</span></div>
-                            <div x-show="!showExplanations" class="flex items-center gap-1.5"><flux:icon.light-bulb class="w-4 h-4 opacity-50" /> <span class="md:hidden">ব্যাখ্যা: বন্ধ</span><span class="hidden md:inline">ব্যাখ্যা দেখান</span></div>
+                            <div x-show="showExplanations" style="display: none;" class="flex items-center gap-1.5"><x-ui.icon.light-bulb class="w-4 h-4" /> <span class="md:hidden">ব্যাখ্যা: চালু</span><span class="hidden md:inline">ব্যাখ্যা লুকান</span></div>
+                            <div x-show="!showExplanations" class="flex items-center gap-1.5"><x-ui.icon.light-bulb class="w-4 h-4 opacity-50" /> <span class="md:hidden">ব্যাখ্যা: বন্ধ</span><span class="hidden md:inline">ব্যাখ্যা দেখান</span></div>
                         </button>
 
                         <!-- Share Button -->
                         <button class="w-9 h-9 shrink-0 flex items-center justify-center bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-700 rounded-full text-zinc-500 hover:text-zinc-900 transition-colors shadow-sm">
-                            <flux:icon.share class="w-4 h-4" />
+                            <x-ui.icon.share class="w-4 h-4" />
                         </button>
                     </div>
                 </div>
@@ -179,7 +179,7 @@
                     <button @click="showTopicWeightage = !showTopicWeightage" class="w-full flex items-center justify-between p-4 text-left focus:outline-none">
                         <div class="flex items-center gap-4">
                             <div class="w-10 h-10 rounded-lg bg-emerald-100 dark:bg-emerald-900/30 flex items-center justify-center text-emerald-600">
-                                <flux:icon.chart-bar class="w-5 h-5" />
+                                <x-ui.icon.chart-bar class="w-5 h-5" />
                             </div>
                             <div>
                                 <h3 class="text-sm font-bold text-zinc-900 dark:text-zinc-100">এই পরীক্ষার বিষয় ও টপিকভিত্তিক প্রশ্ন বিন্যাস (Topic Weightage)</h3>
@@ -188,7 +188,7 @@
                         </div>
                         <div class="flex items-center gap-2 text-emerald-600 text-xs font-bold px-4">
                             বিস্তারিত দেখুন
-                            <flux:icon.chevron-down class="w-4 h-4 transition-transform " x-bind:class="showTopicWeightage ? 'rotate-180' : ''" />
+                            <x-ui.icon.chevron-down class="w-4 h-4 transition-transform " x-bind:class="showTopicWeightage ? 'rotate-180' : ''" />
                         </div>
                     </button>
 
@@ -257,7 +257,7 @@
                                 @endphp
                                 @if($subjectObj && $subjectObj->slug)
                                     <a href="{{ route('job-solutions.index', ['tab' => 'topics', 'subject' => $subjectObj->slug]) }}" class="text-xs font-bold text-emerald-600 flex items-center gap-1 hover:underline">
-                                        বিষয়ভিত্তিক সমাধান <flux:icon.arrow-right class="w-3 h-3" />
+                                        বিষয়ভিত্তিক সমাধান <x-ui.icon.arrow-right class="w-3 h-3" />
                                     </a>
                                 @endif
                             </div>
@@ -278,7 +278,7 @@
                                                         <span class="bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400 px-2 py-1 rounded">{{ $question->chapter->name }}</span>
                                                     @endif
                                                     @if($question->topic)
-                                                        <span class="bg-indigo-50 text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400 px-2 py-1 rounded flex items-center gap-1"><flux:icon.arrow-turn-down-right class="w-2.5 h-2.5" /> {{ $question->topic->name }}</span>
+                                                        <span class="bg-indigo-50 text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400 px-2 py-1 rounded flex items-center gap-1"><x-ui.icon.arrow-turn-down-right class="w-2.5 h-2.5" /> {{ $question->topic->name }}</span>
                                                     @endif
                                                 </div>
                                             </div>
@@ -323,14 +323,14 @@
                                                             {!! $optText !!}
                                                         </div>
                                                         <template x-if="showAnswers && !isQuizMode && {{ $isCorrect }}">
-                                                            <flux:icon.check class="w-4 h-4 text-emerald-500 shrink-0" />
+                                                            <x-ui.icon.check class="w-4 h-4 text-emerald-500 shrink-0" />
                                                         </template>
                                                     </div>
                                                 @endforeach
                                             </div>
                                         @elseif(in_array($question->question_type, ['written', 'short', 'cq']))
                                             <div x-show="showAnswers && !isQuizMode" style="display: none;" class="mt-4 p-4 bg-emerald-50/50 dark:bg-emerald-900/10 border border-emerald-100 dark:border-emerald-900/30 rounded-xl">
-                                                <p class="text-xs font-bold text-emerald-800 dark:text-emerald-400 mb-2 flex items-center gap-1.5"><flux:icon.check-circle class="w-4 h-4" /> উত্তর / সমাধান:</p>
+                                                <p class="text-xs font-bold text-emerald-800 dark:text-emerald-400 mb-2 flex items-center gap-1.5"><x-ui.icon.check-circle class="w-4 h-4" /> উত্তর / সমাধান:</p>
                                                 <div class="text-sm md:text-[15px] text-zinc-700 dark:text-zinc-300 tex2jax_process" data-math-content>
                                                     @if($question->description)
                                                         {!! $question->description !!}
@@ -349,9 +349,9 @@
                                                 <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
                                                     <template x-if="!isQuizMode">
                                                         <button type="button" x-on:click="localOpen = !localOpen" class="inline-flex w-fit items-center gap-1 text-sm font-semibold text-zinc-500 hover:text-emerald-600 dark:text-zinc-400 dark:hover:text-emerald-400 transition-colors">
-                                                            <flux:icon.light-bulb class="w-4 h-4" />
+                                                            <x-ui.icon.light-bulb class="w-4 h-4" />
                                                             <span x-text="localOpen ? 'ব্যাখ্যা লুকান' : 'ব্যাখ্যা দেখুন'"></span>
-                                                            <flux:icon.chevron-down class="size-4 transition-transform" x-bind:class="localOpen ? 'rotate-180' : ''" />
+                                                            <x-ui.icon.chevron-down class="size-4 transition-transform" x-bind:class="localOpen ? 'rotate-180' : ''" />
                                                         </button>
                                                     </template>
                                                     <template x-if="isQuizMode">
@@ -360,26 +360,26 @@
 
                                                     <div class="flex items-center gap-4 text-zinc-400 dark:text-zinc-500">
                                                         <div class="flex items-center gap-1.5" title="Views">
-                                                            <flux:icon.eye class="size-[18px]" />
+                                                            <x-ui.icon.eye class="size-[18px]" />
                                                             <span class="text-sm font-semibold text-zinc-500 dark:text-zinc-400">{{ $question->views_count ?? 0 }}</span>
                                                         </div>
                                                         <button type="button" class="cursor-pointer hover:text-emerald-600 dark:hover:text-emerald-400" title="Statistics">
-                                                            <flux:icon.chart-pie class="size-[18px]" />
+                                                            <x-ui.icon.chart-pie class="size-[18px]" />
                                                         </button>
                                                         <button type="button" @click="toggleBookmark({{ $question->id }}, $event)" class="cursor-pointer {{ $question->is_bookmarked ? 'text-emerald-600 dark:text-emerald-400' : 'hover:text-emerald-600 dark:hover:text-emerald-400' }}" title="{{ $question->is_bookmarked ? 'Remove Bookmark' : 'Save Bookmark' }}">
-                                                            <flux:icon.bookmark class="size-[18px]" variant="{{ $question->is_bookmarked ? 'solid' : 'outline' }}" />
+                                                            <x-ui.icon.bookmark class="size-[18px]" variant="{{ $question->is_bookmarked ? 'solid' : 'outline' }}" />
                                                         </button>
                                                         <button type="button" @click="toggleLike({{ $question->id }}, $event)" class="flex items-center gap-1 cursor-pointer {{ $question->is_liked ? 'text-pink-500' : 'hover:text-pink-500' }}" title="{{ $question->is_liked ? 'Unlike' : 'Like' }}">
-                                                            <flux:icon.heart class="size-[18px]" variant="{{ $question->is_liked ? 'solid' : 'outline' }}" />
+                                                            <x-ui.icon.heart class="size-[18px]" variant="{{ $question->is_liked ? 'solid' : 'outline' }}" />
                                                             @if($question->likes_count > 0)
                                                                 <span class="text-xs font-medium">{{ $question->likes_count }}</span>
                                                             @endif
                                                         </button>
                                                         <button type="button" @click="$dispatch('open-report-modal', { id: {{ $question->id }} })" class="cursor-pointer hover:text-red-500 dark:hover:text-red-400" title="Report Error">
-                                                            <flux:icon.flag class="size-[18px]" />
+                                                            <x-ui.icon.flag class="size-[18px]" />
                                                         </button>
                                                         <button type="button" class="cursor-pointer hover:text-blue-500 dark:hover:text-blue-400" title="Share">
-                                                            <flux:icon.share class="size-[18px]" />
+                                                            <x-ui.icon.share class="size-[18px]" />
                                                         </button>
                                                     </div>
                                                 </div>
@@ -392,7 +392,7 @@
                                                     @else
                                                         <div class="space-y-3 text-center">
                                                             <div>
-                                                                <flux:icon.sparkles class="mx-auto size-6 text-violet-500" />
+                                                                <x-ui.icon.sparkles class="mx-auto size-6 text-violet-500" />
                                                                 <p class="font-semibold text-zinc-600 dark:text-zinc-300">{{ __('No explanation yet') }}</p>
 
                                                                 <button
@@ -401,7 +401,7 @@
                                                                     @click="generateAiExplanation({{ $question->id }})"
                                                                     class="mt-2 inline-flex items-center gap-2 rounded-full bg-violet-600 px-4 py-1.5 text-xs font-semibold text-white hover:bg-violet-700 shadow-sm"
                                                                 >
-                                                                    <flux:icon.sparkles class="size-3.5" />
+                                                                    <x-ui.icon.sparkles class="size-3.5" />
                                                                     AI দিয়ে ব্যাখ্যা তৈরি করুন
                                                                 </button>
 
@@ -452,7 +452,7 @@
                             </div>
                         @else
                             <div class="w-12 h-12 rounded-full bg-emerald-50 flex items-center justify-center shrink-0">
-                                <flux:icon.building-office-2 class="w-6 h-6 text-emerald-600" />
+                                <x-ui.icon.building-office-2 class="w-6 h-6 text-emerald-600" />
                             </div>
                         @endif
                         <div>
@@ -483,7 +483,7 @@
                 <div class="bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-2xl overflow-hidden shadow-sm">
                     <div class="flex justify-between items-center p-4 border-b border-zinc-100 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-800/20">
                         <h3 class="text-[13px] font-bold text-zinc-800 dark:text-zinc-200 flex items-center gap-2">
-                            <flux:icon.building-office class="w-4 h-4 text-zinc-400" /> অন্যান্য শীর্ষ প্রতিষ্ঠান
+                            <x-ui.icon.building-office class="w-4 h-4 text-zinc-400" /> অন্যান্য শীর্ষ প্রতিষ্ঠান
                         </h3>
                         <a href="{{ route('job-solutions.index', ['tab' => 'organizations']) }}" class="text-[10px] font-bold text-emerald-600 hover:underline">সকল প্রতিষ্ঠা</a>
                     </div>
@@ -498,7 +498,7 @@
                                         </div>
                                     @else
                                         <div class="w-8 h-8 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center shrink-0">
-                                            <flux:icon.building-office-2 class="w-4 h-4 text-zinc-400" />
+                                            <x-ui.icon.building-office-2 class="w-4 h-4 text-zinc-400" />
                                         </div>
                                     @endif
                                     <div>
@@ -555,7 +555,7 @@
                             rootMargin: '600px', // Load early before reaching bottom
                             threshold: 0
                         });
-                        
+
                         this.$nextTick(() => {
                             const sentinel = document.getElementById('scroll-sentinel');
                             if (sentinel) {

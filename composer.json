@@ -1,8 +1,8 @@
 {
     "$schema": "https://getcomposer.org/schema.json",
-    "name": "laravel/livewire-starter-kit",
+    "name": "laravel/question-bank",
     "type": "project",
-    "description": "The official Laravel starter kit for Livewire.",
+    "description": "A Laravel question bank application.",
     "keywords": [
         "laravel",
         "framework"
@@ -11,13 +11,10 @@
     "require": {
         "php": "^8.3",
         "blade-ui-kit/blade-heroicons": "^2.7",
-        "creativehabib/media-manager": "^1.2",
         "google/cloud-vision": "^2.2",
         "laravel/fortify": "^1.34",
         "laravel/framework": "^13.0",
         "laravel/tinker": "^3.0",
-        "livewire/flux": "^2.12.0",
-        "livewire/livewire": "^4.0",
         "mpdf/mpdf": "^8.3",
         "spatie/laravel-backup": "^10.3",
         "spatie/laravel-permission": "^7.3"

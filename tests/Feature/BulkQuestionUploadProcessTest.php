@@ -1,10 +1,10 @@
 <?php
 
-use App\Livewire\Questions\BulkUpload;
-use Livewire\Livewire;
+use App\Http\Controllers\Pages\Questions\BulkUpload;
+use Tests\Support\PageTest;
 
 it('processes raw mcq text into preview questions before submit', function () {
-    Livewire::test(BulkUpload::class)
+    PageTest::test(BulkUpload::class)
         ->set('rawText', '১. শব্দটির অর্থ কী? (ক) কলসি (খ) চরকি (গ) কুলফি (ঘ) বাড়ি')
         ->call('processQuestions')
         ->assertHasNoErrors()

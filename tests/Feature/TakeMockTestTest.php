@@ -1,6 +1,6 @@
 <?php
 
-use App\Livewire\Students\TakeMockTest;
+use App\Http\Controllers\Pages\Students\TakeMockTest;
 use App\Models\AcademicClass;
 use App\Models\MockTest;
 use App\Models\MockTestQuestion;
@@ -9,7 +9,7 @@ use App\Models\Subject;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
-use Livewire\Livewire;
+use Tests\Support\PageTest;
 
 uses(RefreshDatabase::class);
 
@@ -62,7 +62,7 @@ test('student answers are kept in Alpine until submission and saved in one reque
         'question_id' => $question->id,
     ]);
 
-    Livewire::actingAs($student)
+    PageTest::actingAs($student)
         ->test(TakeMockTest::class, ['testId' => $mockTest->id])
         ->assertSee('x-model="answers['.$testQuestion->id.']"', false)
         ->call('submitExam', [$testQuestion->id => 1])

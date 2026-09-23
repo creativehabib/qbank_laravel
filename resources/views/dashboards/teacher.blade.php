@@ -1,23 +1,23 @@
-<x-layouts::app title="Teacher Dashboard">
+<x-layouts.app title="Teacher Dashboard">
     <div class="space-y-4 sm:space-y-5">
-            <flux:card>
+            <x-ui.card>
                 <div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
                     <div class="space-y-1">
-                        <flux:heading size="xl">{{ auth()->user()?->organization_name ?: 'অনলাইন ডিজিটাল স্কুল' }}</flux:heading>
-                        <flux:subheading size="lg">{{ auth()->user()?->organization_address ?: 'Add Organization Address' }}</flux:subheading>
+                        <x-ui.heading size="xl">{{ auth()->user()?->organization_name ?: 'অনলাইন ডিজিটাল স্কুল' }}</x-ui.heading>
+                        <x-ui.subheading size="lg">{{ auth()->user()?->organization_address ?: 'Add Organization Address' }}</x-ui.subheading>
                     </div>
 
                     <div class="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
-                        <flux:button href="{{ route('profile.edit') }}" variant="primary">Update Profile</flux:button>
-                        <flux:button href="#" variant="outline">Organization Details</flux:button>
+                        <x-ui.button href="{{ route('profile.edit') }}" variant="primary">Update Profile</x-ui.button>
+                        <x-ui.button href="#" variant="outline">Organization Details</x-ui.button>
                     </div>
                 </div>
-            </flux:card>
+            </x-ui.card>
 
-            <flux:card>
+            <x-ui.card>
                 <div class="space-y-2 text-center">
-                    <flux:heading size="xl">Create Questions</flux:heading>
-                    <flux:subheading>Use the E-Question Builder to create custom question papers for academic, admission, and job preparations.</flux:subheading>
+                    <x-ui.heading size="xl">Create Questions</x-ui.heading>
+                    <x-ui.subheading>Use the E-Question Builder to create custom question papers for academic, admission, and job preparations.</x-ui.subheading>
                 </div>
 
                 <div
@@ -53,12 +53,12 @@
                         </div>
                     </div>
                 </div>
-            </flux:card>
+            </x-ui.card>
 
-            <flux:card>
+            <x-ui.card>
                 <div class="space-y-1 mb-6 text-center">
-                    <flux:heading size="lg">Dashboard Overview</flux:heading>
-                    <flux:subheading>আপনার প্রস্তুতকৃত প্রশ্ন ও কন্ট্রিবিউশন ওভারভিউ দেখুন।</flux:subheading>
+                    <x-ui.heading size="lg">Dashboard Overview</x-ui.heading>
+                    <x-ui.subheading>আপনার প্রস্তুতকৃত প্রশ্ন ও কন্ট্রিবিউশন ওভারভিউ দেখুন।</x-ui.subheading>
                 </div>
 
                 <div class="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
@@ -79,7 +79,7 @@
                         <p class="mt-2 text-3xl font-black text-zinc-900 dark:text-zinc-100">৳ {{ number_format($teacherStats['total_cost'] ?? 0, 2) }}</p>
                     </div>
                 </div>
-            </flux:card>
+            </x-ui.card>
 
     </div>
-</x-layouts::app>
+</x-layouts.app>

@@ -1,5 +1,6 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="csrf-token" content="{{ csrf_token() }}">
 
 @php
     $branding = \App\Support\SettingsStore::group('branding');
@@ -147,26 +148,9 @@
 
 <script src="/ckeditor/ckeditor.js" type="text/javascript" defer></script>
 
-<script>
-    document.addEventListener('livewire:navigated', () => {
-        if (typeof window.renderKatex === 'function') {
-            window.renderKatex();
-        }
-    });
 
-    document.addEventListener('livewire:initialized', () => {
-        Livewire.hook('commit', ({ succeed }) => {
-            succeed(() => {
-                requestAnimationFrame(() => {
-                    if (typeof window.renderKatex === 'function') {
-                        window.renderKatex();
-                    }
-                });
-            });
-        });
-    });
-</script>
 
+<script>window.__pageState = @json($pageState ?? []);</script>
 @vite(['resources/css/app.css', 'resources/js/app.js'])
 @stack('styles')
 
@@ -177,7 +161,30 @@
 </style>
 
 <script>
-    window.Flux = {
+    window.AppUI = {
+        toast ({ text, heading = '', variant = 'success' }) {
+            const toast = document.createElement('div');
+            toast.className = `fixed right-4 top-4 z-[100] max-w-sm rounded-lg px-4 py-3 text-white shadow-lg ${variant === 'danger' ? 'bg-red-600' : variant === 'warning' ? 'bg-amber-500' : 'bg-emerald-600'}`;
+            if (heading) {
+                const title = document.createElement('strong');
+                title.className = 'block';
+                title.textContent = heading;
+                toast.appendChild(title);
+            }
+            const message = document.createElement('span');
+            message.textContent = text;
+            toast.appendChild(message);
+            document.body.appendChild(toast);
+            window.setTimeout(() => toast.remove(), 3500);
+        },
+        modal (name) {
+            const element = document.querySelector(`[name="${name}"]`);
+
+            return {
+                show: () => element?.classList.remove('hidden'),
+                close: () => element?.classList.add('hidden'),
+            };
+        },
         applyAppearance (appearance, saveToStorage = true) {
             let applyDark = () => document.documentElement.classList.add('dark')
             let applyLight = () => document.documentElement.classList.remove('dark')
@@ -185,27 +192,27 @@
             if (appearance === 'system') {
                 let media = window.matchMedia('(prefers-color-scheme: dark)')
 
-                if (saveToStorage) window.localStorage.removeItem('flux.appearance')
+                if (saveToStorage) window.localStorage.removeItem('app.appearance')
 
                 media.matches ? applyDark() : applyLight()
             } else if (appearance === 'dark') {
-                if (saveToStorage) window.localStorage.setItem('flux.appearance', 'dark')
+                if (saveToStorage) window.localStorage.setItem('app.appearance', 'dark')
 
                 applyDark()
             } else if (appearance === 'light') {
-                if (saveToStorage) window.localStorage.setItem('flux.appearance', 'light')
+                if (saveToStorage) window.localStorage.setItem('app.appearance', 'light')
 
                 applyLight()
             }
         }
     }
 
-    const userPref = window.localStorage.getItem('flux.appearance') || window.localStorage.getItem('theme');
+    const userPref = window.localStorage.getItem('app.appearance') || window.localStorage.getItem('theme');
     const adminDefault = '{{ strtolower($defaultTheme) }}';
 
     if (userPref) {
-        window.Flux.applyAppearance(userPref, false);
+        window.AppUI.applyAppearance(userPref, false);
     } else {
-        window.Flux.applyAppearance(adminDefault, false);
+        window.AppUI.applyAppearance(adminDefault, false);
     }
 </script>

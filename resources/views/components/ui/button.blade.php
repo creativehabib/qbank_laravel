@@ -1,0 +1,2 @@
+@props(['variant' => null, 'href' => null])
+@if($href)<a href="{{ $href }}" {{ $attributes->except(['variant', 'icon'])->merge(['class' => 'inline-flex items-center justify-center rounded-lg px-4 py-2 font-medium']) }}>{{ $slot }}</a>@else<button {{ $attributes->except(['variant', 'icon'])->merge(['class' => 'inline-flex items-center justify-center rounded-lg px-4 py-2 font-medium']) }}>{{ $slot }}</button>@endif

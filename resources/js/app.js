@@ -8,7 +8,7 @@ window.ApexCharts = ApexCharts;
 window.$ = window.jQuery = $;
 
 // ==========================================
-// ১. Flux UI কাস্টম এলিমেন্ট (ui-modal) কনফ্লিক্ট রোধ (Local Dev / HMR Fix)
+// ১. UI কাস্টম এলিমেন্ট (ui-modal) কনফ্লিক্ট রোধ (Local Dev / HMR Fix)
 // ==========================================
 if (typeof customElements !== 'undefined') {
     const originalDefine = customElements.define;
@@ -20,30 +20,31 @@ if (typeof customElements !== 'undefined') {
 }
 
 // ==========================================
-// ২. Alpine & Plugins (Livewire 3 Compatible)
+// ২. Alpine & Plugins (Alpine components)
 // ==========================================
-// Livewire 3 নিজেই Alpine চালু করে, তাই ম্যানুয়ালি স্টার্ট না করে শুধু প্লাগিন যুক্ত করা হলো
+// Alpine is started directly without a server-side UI runtime
+import Alpine from 'alpinejs';
 import collapse from '@alpinejs/collapse';
 
-document.addEventListener('alpine:init', () => {
-    window.Alpine.plugin(collapse);
-});
+window.Alpine = Alpine;
+
+Alpine.plugin(collapse);
 
 
 // ==========================================
-// ৩. লাইভওয়্যার টোস্ট ইভেন্টস
+// ৩. পৃষ্ঠা টোস্ট ইভেন্টস
 // ==========================================
 window.addEventListener('success', event => {
     let msg = event.detail?.message || (event.detail?.[0] && event.detail[0]?.message);
-    if (msg && window.Flux) window.Flux.toast({ text: msg, variant: 'success' });
+    if (msg && window.AppUI) window.AppUI.toast({ text: msg, variant: 'success' });
 });
 window.addEventListener('warning', event => {
     let msg = event.detail?.message || (event.detail?.[0] && event.detail[0]?.message);
-    if (msg && window.Flux) window.Flux.toast({ text: msg, variant: 'warning' });
+    if (msg && window.AppUI) window.AppUI.toast({ text: msg, variant: 'warning' });
 });
 window.addEventListener('error', event => {
     let msg = event.detail?.message || (event.detail?.[0] && event.detail[0]?.message);
-    if (msg && window.Flux) window.Flux.toast({ text: msg, variant: 'danger' });
+    if (msg && window.AppUI) window.AppUI.toast({ text: msg, variant: 'danger' });
 });
 
 
@@ -63,7 +64,7 @@ window.renderKatex = function() {
             {left: '\\(', right: '\\)', display: false}
         ],
         throwOnError: false,
-        ignoredTags: ["script", "noscript", "style", "textarea", "pre", "code", "div.ck-editor-container", "flux:toast"]
+        ignoredTags: ["script", "noscript", "style", "textarea", "pre", "code", "div.ck-editor-container", "ui-toast"]
     });
 
     // Fallback for old MathJax elements
@@ -98,35 +99,20 @@ window.renderMathJax = function () {
 };
 
 // MathJax/KaTeX এর জন্য ইভেন্ট লিসেনারসমূহ
-document.addEventListener('livewire:navigated', window.renderMathJax);
+document.addEventListener('DOMContentLoaded', window.renderMathJax);
 window.addEventListener('practice-content-updated', window.renderMathJax);
 
-// Prevent Livewire from overwriting KaTeX rendered math during component updates (prevents flickering)
-document.addEventListener('livewire:initialized', () => {
-    Livewire.hook('morph.updating', ({ el, toEl, skip }) => {
-        if (el.hasAttribute && el.hasAttribute('data-math-content')) {
-            let currentRaw = el.getAttribute('data-raw-math') || el.innerText;
-            let newRaw = toEl.innerText;
+// Prevent page controller from overwriting KaTeX rendered math during component updates (prevents flickering)
 
-            if (!el.hasAttribute('data-raw-math')) {
-                el.setAttribute('data-raw-math', currentRaw);
-            }
-
-            if (el.getAttribute('data-raw-math') === newRaw || el.innerHTML.includes('katex')) {
-                skip();
-            }
-        }
-    });
-});
 
 
 // ==========================================
-// ৫. Flux UI delete confirmation
+// ৫. UI delete confirmation
 // ==========================================
 window.confirmDeleteAction = function (callback) {
     window.pendingDeleteAction = callback;
-    if (window.Flux && typeof window.Flux.modal === 'function') {
-        window.Flux.modal('delete-confirmation').show();
+    if (window.AppUI && typeof window.AppUI.modal === 'function') {
+        window.AppUI.modal('delete-confirmation').show();
     } else {
         document.dispatchEvent(new CustomEvent('modal-show', { bubbles: true, detail: { name: 'delete-confirmation' } }));
     }
@@ -136,8 +122,8 @@ window.confirmPendingDeletion = function () {
     const callback = window.pendingDeleteAction;
 
     window.pendingDeleteAction = null;
-    if (window.Flux && typeof window.Flux.modal === 'function') {
-        window.Flux.modal('delete-confirmation').close();
+    if (window.AppUI && typeof window.AppUI.modal === 'function') {
+        window.AppUI.modal('delete-confirmation').close();
     } else {
         document.dispatchEvent(new CustomEvent('modal-close', { bubbles: true, detail: { name: 'delete-confirmation' } }));
     }
@@ -163,7 +149,7 @@ window.wrapMathForCKEditor = function(html) {
     return cleanHtml;
 };
 
-window.initGlobalCkEditor = function(elementId, livewireComponent, livewireProperty, isAdvanced = false) {
+window.initGlobalCkEditor = function(elementId, pageComponent, pageProperty, isAdvanced = false) {
     const el = document.getElementById(elementId);
     if (!el || el.offsetParent === null) return null;
 
@@ -212,20 +198,20 @@ window.initGlobalCkEditor = function(elementId, livewireComponent, livewirePrope
         evt.data.dataValue = window.wrapMathForCKEditor(evt.data.dataValue);
     });
 
-    if (livewireProperty && livewireComponent) {
+    if (pageProperty && pageComponent) {
         let ckDebounceTimer;
         editor.on('change', function () {
             let data = editor.getData();
             clearTimeout(ckDebounceTimer);
             ckDebounceTimer = setTimeout(() => {
-                if (typeof livewireComponent.set === 'function') {
-                    livewireComponent.set(livewireProperty, data);
-                } else if (typeof livewireComponent.$set === 'function') {
-                    livewireComponent.$set(livewireProperty, data);
+                if (typeof pageComponent.set === 'function') {
+                    pageComponent.set(pageProperty, data);
+                } else if (typeof pageComponent.$set === 'function') {
+                    pageComponent.$set(pageProperty, data);
                 } else {
-                    livewireComponent[livewireProperty] = data;
+                    pageComponent[pageProperty] = data;
                 }
-                if (livewireProperty === 'title') {
+                if (pageProperty === 'title') {
                     let isEditMode = window.location.href.includes('/edit');
                     let slugInput = document.getElementById('slug_input');
                     if (slugInput) {
@@ -247,11 +233,77 @@ window.initGlobalCkEditor = function(elementId, livewireComponent, livewirePrope
     return editor;
 };
 
-// Global cleanup for CKEditor to avoid memory leaks or duplicate instances on Livewire navigation
-document.addEventListener('livewire:navigating', () => {
+// Global cleanup for CKEditor to avoid memory leaks or duplicate instances on page navigation
+window.addEventListener('beforeunload', () => {
     if (typeof CKEDITOR !== 'undefined') {
         for (let instanceName in CKEDITOR.instances) {
             try { CKEDITOR.instances[instanceName].destroy(true); } catch(e) {}
         }
     }
+});
+
+
+const normalizeFieldName = name => name.replace(/\.([^.]+)/g, '[$1]');
+const parseAction = expression => {
+    const match = String(expression || '').trim().match(/^([\w$]+)(?:\((.*)\))?$/s);
+    if (!match) return null;
+    let args = [];
+    if (match[2]?.trim()) {
+        try { args = Function(`"use strict"; return [${match[2]}]`)(); } catch (_) { args = []; }
+    }
+    return { name: match[1], args };
+};
+const submitPageAction = (expression, source = document.body) => {
+    const action = parseAction(expression);
+    if (!action) return;
+    const form = source.closest?.('form') || document.createElement('form');
+    if (!form.isConnected) document.body.appendChild(form);
+    form.method = 'POST';
+    form.action = window.location.href;
+    if (!form.querySelector('[name="_token"]')) {
+        const token = document.querySelector('meta[name="csrf-token"]')?.content;
+        form.insertAdjacentHTML('beforeend', `<input type="hidden" name="_token" value="${token || ''}">`);
+    }
+    [[' _action'.trim(), action.name], ['_arguments', JSON.stringify(action.args)]].forEach(([name, value]) => {
+        let input = form.querySelector(`[name="${name}"]`);
+        if (!input) { input = document.createElement('input'); input.type = 'hidden'; input.name = name; form.appendChild(input); }
+        input.value = value;
+    });
+    form.submit();
+};
+
+window.Page = new Proxy(window.__pageState || {}, {
+    get(target, property) {
+        if (property === 'set' || property === '$set') return (name, value) => {
+            target[name] = value;
+            const control = document.querySelector(`[data-page-model="${name}"], [data-page-model\\.live="${name}"]`);
+            if (control) control.value = value ?? '';
+        };
+        if (property === 'upload') return (name, file) => {
+            const control = document.querySelector(`[data-page-model="${name}"]`);
+            if (control && file) { const transfer = new DataTransfer(); transfer.items.add(file); control.files = transfer.files; }
+        };
+        if (property in target) return target[property];
+        return (...args) => submitPageAction(`${String(property)}(${args.map(JSON.stringify).join(',')})`);
+    }
+});
+Alpine.magic('page', () => window.Page);
+
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('[data-page-model], [data-page-model\\.live], [data-page-model\\.defer]').forEach(control => {
+        const model = control.getAttribute('data-page-model') || control.getAttribute('data-page-model.live') || control.getAttribute('data-page-model.defer');
+        if (!control.name) control.name = normalizeFieldName(model);
+        if (window.__pageState?.[model] !== undefined && !control.value) control.value = window.__pageState[model] ?? '';
+    });
+    document.querySelectorAll('[data-page-submit], [data-page-submit\\.prevent]').forEach(form => form.addEventListener('submit', event => {
+        event.preventDefault();
+        submitPageAction(form.getAttribute('data-page-submit') || form.getAttribute('data-page-submit.prevent'), form);
+    }));
+    document.querySelectorAll('[data-page-click], [data-page-click\\.prevent]').forEach(element => element.addEventListener('click', event => {
+        event.preventDefault();
+        const confirmation = element.getAttribute('data-page-confirm');
+        if (confirmation && !window.confirm(confirmation)) return;
+        submitPageAction(element.getAttribute('data-page-click') || element.getAttribute('data-page-click.prevent'), element);
+    }));
+    Alpine.start();
 });

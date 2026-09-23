@@ -1,13 +1,13 @@
 <?php
 
-use App\Livewire\Questions\Create;
+use App\Http\Controllers\Pages\Questions\Create;
 use App\Models\User;
-use Livewire\Livewire;
+use Tests\Support\PageTest;
 
 it('forbids students from submitting question create action', function () {
     $student = User::factory()->create();
 
-    Livewire::actingAs($student)
+    PageTest::actingAs($student)
         ->test(Create::class)
         ->call('save')
         ->assertForbidden();
@@ -16,7 +16,7 @@ it('forbids students from submitting question create action', function () {
 it('allows teachers to access question create action without authorization errors', function () {
     $teacher = User::factory()->teacher()->create();
 
-    Livewire::actingAs($teacher)
+    PageTest::actingAs($teacher)
         ->test(Create::class)
         ->call('save')
         ->assertHasErrors([

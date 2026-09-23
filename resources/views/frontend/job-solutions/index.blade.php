@@ -22,13 +22,13 @@
 
                 <nav class="flex items-center gap-6 shrink-0 overflow-x-auto">
                     <a href="?tab=exams" class="flex items-center gap-2 pb-1 text-sm font-bold whitespace-nowrap border-b-2 transition-colors {{ $tab === 'exams' ? 'text-emerald-600 dark:text-emerald-400 border-emerald-500' : 'text-slate-500 dark:text-slate-400 border-transparent hover:text-slate-800 dark:hover:text-slate-200' }}">
-                        <flux:icon.document-check class="w-4 h-4" /> পরীক্ষা ও সমাধান
+                        <x-ui.icon.document-check class="w-4 h-4" /> পরীক্ষা ও সমাধান
                     </a>
                     <a href="?tab=topics" class="flex items-center gap-2 pb-1 text-sm font-bold whitespace-nowrap border-b-2 transition-colors {{ $tab === 'topics' ? 'text-emerald-600 dark:text-emerald-400 border-emerald-500' : 'text-slate-500 dark:text-slate-400 border-transparent hover:text-slate-800 dark:hover:text-slate-200' }}">
-                        <flux:icon.book-open class="w-4 h-4" /> বিষয় ও অধ্যায়ভিত্তিক
+                        <x-ui.icon.book-open class="w-4 h-4" /> বিষয় ও অধ্যায়ভিত্তিক
                     </a>
                     <a href="?tab=organizations" class="flex items-center gap-2 pb-1 text-sm font-bold whitespace-nowrap border-b-2 transition-colors {{ $tab === 'organizations' ? 'text-emerald-600 dark:text-emerald-400 border-emerald-500' : 'text-slate-500 dark:text-slate-400 border-transparent hover:text-slate-800 dark:hover:text-slate-200' }}">
-                        <flux:icon.building-office-2 class="w-4 h-4" /> প্রতিষ্ঠান
+                        <x-ui.icon.building-office-2 class="w-4 h-4" /> প্রতিষ্ঠান
                     </a>
                 </nav>
             </div>
@@ -45,14 +45,14 @@
                     <summary class="list-none cursor-pointer p-4 flex items-center justify-between select-none">
                         <div class="flex items-center gap-4">
                             <div class="w-10 h-10 rounded-full bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-slate-400 shrink-0">
-                                <flux:icon.funnel class="w-5 h-5" />
+                                <x-ui.icon.funnel class="w-5 h-5" />
                             </div>
                             <div>
                                 <h3 class="text-[13px] font-bold text-slate-700 dark:text-slate-300">ফিল্টার ও অনুসন্ধান অপশন</h3>
                                 <p class="text-[11px] text-slate-400 mt-0.5">গ্রেড, সাল, প্রতিষ্ঠান ও ধরন অনুযায়ী ফিল্টার করতে ক্লিক করুন</p>
                             </div>
                         </div>
-                        <flux:icon.chevron-down class="w-4 h-4 text-slate-400 shrink-0 transition-transform group-open:rotate-180" />
+                        <x-ui.icon.chevron-down class="w-4 h-4 text-slate-400 shrink-0 transition-transform group-open:rotate-180" />
                     </summary>
                     <div class="px-4 pt-1 text-[12px] text-slate-400">
                         {{-- ফিল্টার ফর্ম এখানে বসবে --}}
@@ -78,7 +78,7 @@
                                     <span class="text-slate-300 dark:text-slate-700">&bull;</span>
                                     <span>{{ $exam->exam_date ? $exam->exam_date->format('d M, Y') : '-' }}</span>
                                     <span class="text-slate-300 dark:text-slate-700">&bull;</span>
-                                    <span class="text-indigo-600 dark:text-indigo-400 flex items-center gap-1"><flux:icon.tag class="w-3 h-3" /> {{ $exam->examCategory?->name ?? 'সাধারণ গ্রেড' }}</span>
+                                    <span class="text-indigo-600 dark:text-indigo-400 flex items-center gap-1"><x-ui.icon.tag class="w-3 h-3" /> {{ $exam->examCategory?->name ?? 'সাধারণ গ্রেড' }}</span>
                                 </div>
                                 <a href="{{ $exam->organization ? route('job-solutions.show', ['organizationSlug' => $exam->organization->slug, 'examSlug' => $exam->slug]) : '#' }}" class="block">
                                     <h3 class="text-base font-bold text-slate-900 dark:text-white leading-snug group-hover:text-emerald-600 dark:group-hover:text-emerald-400 transition-colors">
@@ -97,9 +97,9 @@
                             </div>
 
                             <div class="shrink-0 w-full md:w-auto">
-                                <flux:button href="{{ $exam->organization ? route('job-solutions.show', ['organizationSlug' => $exam->organization->slug, 'examSlug' => $exam->slug]) : '#' }}" size="sm" variant="primary" class="bg-slate-900 dark:bg-emerald-600 hover:bg-emerald-600 dark:hover:bg-emerald-500 text-white border-0 rounded-lg px-5 w-full md:w-auto">
-                                    সমাধান পড়ুন <flux:icon.chevron-right class="w-3 h-3 ml-1" />
-                                </flux:button>
+                                <x-ui.button href="{{ $exam->organization ? route('job-solutions.show', ['organizationSlug' => $exam->organization->slug, 'examSlug' => $exam->slug]) : '#' }}" size="sm" variant="primary" class="bg-slate-900 dark:bg-emerald-600 hover:bg-emerald-600 dark:hover:bg-emerald-500 text-white border-0 rounded-lg px-5 w-full md:w-auto">
+                                    সমাধান পড়ুন <x-ui.icon.chevron-right class="w-3 h-3 ml-1" />
+                                </x-ui.button>
                             </div>
                         </div>
                     @empty
@@ -127,7 +127,7 @@
                         <div class="w-full md:w-80">
                             <div class="relative">
                                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                    <flux:icon.magnifying-glass class="w-4 h-4 text-slate-400" />
+                                    <x-ui.icon.magnifying-glass class="w-4 h-4 text-slate-400" />
                                 </div>
                                 <input type="text" class="block w-full pl-10 pr-3 py-2 border border-slate-200 dark:border-slate-700 rounded-lg bg-slate-50 dark:bg-slate-800 text-sm placeholder-slate-400 focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500" placeholder="প্রশ্ন বা ব্যাখ্যার কিওয়ার্ড দিয়ে খুঁজুন..." disabled>
                             </div>
@@ -136,7 +136,7 @@
 
                     <!-- Subjects -->
                     <div class="mb-6">
-                        <p class="text-[11px] font-bold text-slate-500 dark:text-slate-400 mb-3 flex items-center gap-1.5"><flux:icon.book-open class="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" /> বিষয় নির্বাচন করুন:</p>
+                        <p class="text-[11px] font-bold text-slate-500 dark:text-slate-400 mb-3 flex items-center gap-1.5"><x-ui.icon.book-open class="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" /> বিষয় নির্বাচন করুন:</p>
                         <div class="flex flex-wrap gap-2.5">
                             <a href="?tab=topics" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-bold transition-colors {{ is_null($subject) ? 'bg-emerald-600 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700' }}">
                                 সকল বিষয় <span class="px-1.5 py-0.5 rounded text-[9px] {{ is_null($subject) ? 'bg-white/20 text-white' : 'bg-white text-slate-400 dark:bg-slate-700 dark:text-slate-300' }}">{{ $subjects->sum('questions_count') }}</span>
@@ -152,7 +152,7 @@
                     <!-- Chapters -->
                     @if($currentSubject)
                         <div class="mb-6">
-                            <p class="text-[11px] font-bold text-slate-500 dark:text-slate-400 mb-3 flex items-center gap-1.5"><flux:icon.bars-3-bottom-left class="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" /> '{{ $currentSubject->name }}' এর অধ্যায় বা পরিচ্ছেদ:</p>
+                            <p class="text-[11px] font-bold text-slate-500 dark:text-slate-400 mb-3 flex items-center gap-1.5"><x-ui.icon.bars-3-bottom-left class="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" /> '{{ $currentSubject->name }}' এর অধ্যায় বা পরিচ্ছেদ:</p>
                             <div class="flex flex-wrap gap-2.5">
                                 <a href="?tab=topics&subject={{ $subject }}" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-bold transition-colors {{ is_null($topic) ? 'bg-emerald-600 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700' }}">
                                     সকল অধ্যায়
@@ -169,7 +169,7 @@
                     <!-- Topics -->
                     @if($currentChapter)
                         <div>
-                            <p class="text-[11px] font-bold text-slate-500 dark:text-slate-400 mb-3 flex items-center gap-1.5"><flux:icon.tag class="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" /> '{{ $currentChapter->name }}' এর সাব-টপিক / বিষয়বস্তু:</p>
+                            <p class="text-[11px] font-bold text-slate-500 dark:text-slate-400 mb-3 flex items-center gap-1.5"><x-ui.icon.tag class="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" /> '{{ $currentChapter->name }}' এর সাব-টপিক / বিষয়বস্তু:</p>
                             <div class="flex flex-wrap gap-2.5">
                                 <a href="?tab=topics&subject={{ $subject }}&topic={{ $topic }}" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-bold transition-colors {{ is_null($sub_topic) ? 'bg-indigo-600 text-white' : 'bg-slate-100 text-slate-600 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700' }}">
                                     সকল সাব-টপিক
@@ -197,7 +197,7 @@
                     </div>
                     @if($currentSubject || $currentChapter || $currentTopic)
                         <a href="?tab=topics" class="text-[11px] font-bold text-rose-500 hover:text-rose-600 flex items-center gap-1">
-                            <flux:icon.x-mark class="w-3 h-3" /> ফিল্টার রিসেট
+                            <x-ui.icon.x-mark class="w-3 h-3" /> ফিল্টার রিসেট
                         </a>
                     @endif
                 </div>
@@ -219,14 +219,14 @@
                                             <span class="bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400 px-2 py-1 rounded">{{ $question->chapter->name }}</span>
                                         @endif
                                         @if($question->topic)
-                                            <span class="bg-indigo-50 text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400 px-2 py-1 rounded flex items-center gap-1"><flux:icon.arrow-turn-down-right class="w-2.5 h-2.5" /> {{ $question->topic->name }}</span>
+                                            <span class="bg-indigo-50 text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400 px-2 py-1 rounded flex items-center gap-1"><x-ui.icon.arrow-turn-down-right class="w-2.5 h-2.5" /> {{ $question->topic->name }}</span>
                                         @endif
                                     </div>
                                 </div>
                                 <div class="flex items-center gap-3 text-slate-400 shrink-0">
-                                    <button class="hover:text-rose-500 transition-colors"><flux:icon.heart class="w-4 h-4" /></button>
-                                    <button class="hover:text-emerald-500 transition-colors"><flux:icon.share class="w-4 h-4" /></button>
-                                    <button class="hover:text-amber-500 transition-colors"><flux:icon.exclamation-triangle class="w-4 h-4" /></button>
+                                    <button class="hover:text-rose-500 transition-colors"><x-ui.icon.heart class="w-4 h-4" /></button>
+                                    <button class="hover:text-emerald-500 transition-colors"><x-ui.icon.share class="w-4 h-4" /></button>
+                                    <button class="hover:text-amber-500 transition-colors"><x-ui.icon.exclamation-triangle class="w-4 h-4" /></button>
                                 </div>
                             </div>
 
@@ -257,13 +257,13 @@
                                             $isCorrect = isset($option['is_correct']) && $option['is_correct'];
                                         @endphp
                                         <div class="flex items-center gap-3 p-3 border rounded-xl transition-all {{ $isCorrect ? 'bg-emerald-50 border-emerald-300 dark:bg-emerald-900/20 dark:border-emerald-700' : 'bg-white dark:bg-slate-900 border-slate-200 dark:border-slate-700 hover:border-slate-300 dark:hover:border-slate-600' }}">
-                                            <div class="w-6 h-6 rounded-full border-2 flex items-center justify-center shrink-0 text-[11px] font-bold {{ $isCorrect ? 'bg-emerald-500 border-emerald-500 text-white' : 'border-slate-300 dark:border-slate-600 text-slate-500 dark:text-slate-400' }}">{{ ['ক', 'খ', 'গ', 'ঘ', 'ঙ', 'চ'][$loop->index] ?? chr(65 + $loop->index) }}</div><span class="text-[13px] font-medium flex-grow tex2jax_process {{ $isCorrect ? 'text-emerald-800 dark:text-emerald-200' : 'text-slate-700 dark:text-slate-300' }}" data-math-content>{!! $option['option_text'] !!}</span>@if($isCorrect)<flux:icon.check class="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />@endif
+                                            <div class="w-6 h-6 rounded-full border-2 flex items-center justify-center shrink-0 text-[11px] font-bold {{ $isCorrect ? 'bg-emerald-500 border-emerald-500 text-white' : 'border-slate-300 dark:border-slate-600 text-slate-500 dark:text-slate-400' }}">{{ ['ক', 'খ', 'গ', 'ঘ', 'ঙ', 'চ'][$loop->index] ?? chr(65 + $loop->index) }}</div><span class="text-[13px] font-medium flex-grow tex2jax_process {{ $isCorrect ? 'text-emerald-800 dark:text-emerald-200' : 'text-slate-700 dark:text-slate-300' }}" data-math-content>{!! $option['option_text'] !!}</span>@if($isCorrect)<x-ui.icon.check class="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />@endif
                                         </div>
                                     @endforeach
                                 </div>
                             @elseif(in_array($question->question_type, ['written', 'short', 'cq']))
                                 <div class="ml-9 mt-1 p-4 bg-emerald-50/50 dark:bg-emerald-900/10 border-l-2 border-emerald-400 dark:border-emerald-700 rounded-r-xl">
-                                    <p class="text-xs font-bold text-emerald-800 dark:text-emerald-400 mb-2 flex items-center gap-1.5"><flux:icon.check-circle class="w-4 h-4" /> উত্তর / সমাধান:</p>
+                                    <p class="text-xs font-bold text-emerald-800 dark:text-emerald-400 mb-2 flex items-center gap-1.5"><x-ui.icon.check-circle class="w-4 h-4" /> উত্তর / সমাধান:</p>
                                     <div class="text-sm text-slate-700 dark:text-slate-300 tex2jax_process" data-math-content>
                                         @if($question->description)
                                             {!! $question->description !!}
@@ -277,7 +277,7 @@
                             <!-- Explanation -->
                             @if($question->description && $question->question_type === 'mcq')
                                 <div class="ml-9 mt-4 p-4 bg-slate-50 dark:bg-slate-800/50 border-l-2 border-slate-300 dark:border-slate-700 rounded-r-xl">
-                                    <p class="text-xs font-bold text-emerald-600 dark:text-emerald-400 mb-2 flex items-center gap-1.5"><flux:icon.information-circle class="w-4 h-4" /> ব্যাখ্যা:</p>
+                                    <p class="text-xs font-bold text-emerald-600 dark:text-emerald-400 mb-2 flex items-center gap-1.5"><x-ui.icon.information-circle class="w-4 h-4" /> ব্যাখ্যা:</p>
                                     <div class="text-[13px] text-slate-700 dark:text-slate-300 leading-relaxed">
                                         {!! $question->description !!}
                                     </div>
@@ -303,7 +303,7 @@
                     </h2>
                     <p class="text-sm text-slate-500 dark:text-slate-400 mb-4">নির্দিষ্ট প্রতিষ্ঠানের লোগো বা নামে ক্লিক করে ঐ প্রতিষ্ঠানের অনুষ্ঠিত সকল বিগত নিয়োগ পরীক্ষা একত্রে পড়ুন</p>
 
-                    <flux:input placeholder="প্রতিষ্ঠান খুঁজুন (যেমন: BPSC, ব্যাংক)..." icon="magnifying-glass" class="max-w-md" />
+                    <x-ui.input placeholder="প্রতিষ্ঠান খুঁজুন (যেমন: BPSC, ব্যাংক)..." icon="magnifying-glass" class="max-w-md" />
                 </div>
 
                 <!-- Organizations — index rows, logo + name + count -->
@@ -314,7 +314,7 @@
                                 <img src="{{ $inst->logo_url }}" alt="{{ $inst->name }}" class="w-11 h-11 object-contain shrink-0 rounded-lg border border-slate-100 dark:border-slate-800 bg-white p-1">
                             @else
                                 <div class="w-11 h-11 rounded-full bg-emerald-50 dark:bg-emerald-900/20 flex items-center justify-center shrink-0">
-                                    <flux:icon.building-office-2 class="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
+                                    <x-ui.icon.building-office-2 class="w-5 h-5 text-emerald-600 dark:text-emerald-400" />
                                 </div>
                             @endif
 

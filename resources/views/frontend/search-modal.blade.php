@@ -8,7 +8,7 @@
     <div id="search-modal"
          class="fixed inset-0 z-[100] flex items-start justify-center pt-32 md:pt-40 px-4 sm:px-6 pointer-events-none"
          >
-         
+
         <!-- Modal Content -->
         <div id="search-modal-content"
              class="relative w-full max-w-2xl bg-white dark:bg-zinc-900 rounded-xl shadow-2xl overflow-hidden ring-1 ring-slate-200 dark:ring-zinc-800 flex flex-col max-h-[85vh] transform scale-95 opacity-0 -translate-y-4 transition-all duration-300">
@@ -37,7 +37,7 @@
                 <div id="search-empty-state" class="p-12 text-center">
                     <p class="text-sm text-slate-500 dark:text-zinc-400">যেকোনো কীওয়ার্ড টাইপ করুন (যেমন: বাংলাদেশ, বিসিএস, ঢাকা বিশ্ববিদ্যালয়, কম্পিউটার...)</p>
                 </div>
-                
+
                 <div id="search-no-results" class="p-12 text-center hidden">
                     <p class="text-sm text-slate-500 dark:text-zinc-400">কোনো রেজাল্ট পাওয়া যায়নি।</p>
                 </div>
@@ -72,7 +72,7 @@
         const content = document.getElementById('search-modal-content');
         const input = document.getElementById('search-input');
         const closeBtn = document.getElementById('close-search-btn');
-        
+
         const loading = document.getElementById('search-loading');
         const emptyState = document.getElementById('search-empty-state');
         const noResults = document.getElementById('search-no-results');
@@ -89,29 +89,29 @@
         function openModal() {
             if (isOpen) return;
             isOpen = true;
-            
+
             backdrop.classList.remove('opacity-0', 'pointer-events-none');
             backdrop.classList.add('opacity-100', 'pointer-events-auto');
-            
+
             modal.classList.remove('pointer-events-none');
             modal.classList.add('pointer-events-auto');
-            
+
             content.classList.remove('opacity-0', '-translate-y-4', 'scale-95');
             content.classList.add('opacity-100', 'translate-y-0', 'scale-100');
-            
+
             setTimeout(() => input.focus(), 50);
         }
 
         function closeModal() {
             if (!isOpen) return;
             isOpen = false;
-            
+
             backdrop.classList.remove('opacity-100', 'pointer-events-auto');
             backdrop.classList.add('opacity-0', 'pointer-events-none');
-            
+
             modal.classList.remove('pointer-events-auto');
             modal.classList.add('pointer-events-none');
-            
+
             content.classList.remove('opacity-100', 'translate-y-0', 'scale-100');
             content.classList.add('opacity-0', '-translate-y-4', 'scale-95');
         }
@@ -127,7 +127,7 @@
 
             loading.classList.remove('hidden');
             emptyState.classList.add('hidden');
-            
+
             if (currentController) {
                 currentController.abort();
             }
@@ -137,11 +137,11 @@
                 .then(response => response.json())
                 .then(data => {
                     loading.classList.add('hidden');
-                    
+
                     if (data.results && data.results.length > 0) {
                         noResults.classList.add('hidden');
                         resultsList.classList.remove('hidden');
-                        
+
                         let html = '';
                         data.results.forEach(question => {
                             html += `
@@ -173,7 +173,7 @@
         });
         closeBtn.addEventListener('click', closeModal);
         window.addEventListener('open-search', openModal);
-        
+
         input.addEventListener('input', (e) => {
             clearTimeout(timer);
             const val = e.target.value.trim();
@@ -207,7 +207,7 @@ if (!window._searchShortcutBound) {
                 window.dispatchEvent(new CustomEvent('open-search'));
             }
         }
-        
+
         if (e.key === 'Escape') {
             if (typeof window.closeSearchModal === 'function') {
                 window.closeSearchModal();

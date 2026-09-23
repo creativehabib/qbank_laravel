@@ -1,6 +1,6 @@
 <?php
 
-use App\Livewire\Questions;
+use App\Http\Controllers\Pages\Questions;
 use App\Models\AcademicClass;
 use App\Models\Chapter;
 use App\Models\Question;
@@ -8,7 +8,7 @@ use App\Models\Subject;
 use App\Models\Topic;
 use App\Models\User;
 use Illuminate\Support\Str;
-use Livewire\Livewire;
+use Tests\Support\PageTest;
 
 function createModerationQuestionDependencies(): array
 {
@@ -88,7 +88,7 @@ it('filters questions through the class subject chapter and topic hierarchy', fu
         'status' => 'pending',
     ]);
 
-    Livewire::actingAs($admin)
+    PageTest::actingAs($admin)
         ->test(Questions::class)
         ->set('academicClassId', $academicClass->id)
         ->set('subjectId', $subject->id)
@@ -117,7 +117,7 @@ it('moves selected questions to trash then restores and permanently deletes them
         'status' => 'pending',
     ]);
 
-    Livewire::actingAs($admin)
+    PageTest::actingAs($admin)
         ->test(Questions::class)
         ->set('selectedQuestionIds', [$question->id])
         ->call('confirmAction', 'trash')
@@ -125,7 +125,7 @@ it('moves selected questions to trash then restores and permanently deletes them
 
     $this->assertSoftDeleted('questions', ['id' => $question->id]);
 
-    Livewire::actingAs($admin)
+    PageTest::actingAs($admin)
         ->test(Questions::class)
         ->call('setQuickFilter', 'trash')
         ->set('selectedQuestionIds', [$question->id])
@@ -136,7 +136,7 @@ it('moves selected questions to trash then restores and permanently deletes them
 
     $question->delete();
 
-    Livewire::actingAs($admin)
+    PageTest::actingAs($admin)
         ->test(Questions::class)
         ->call('setQuickFilter', 'trash')
         ->set('selectedQuestionIds', [$question->id])

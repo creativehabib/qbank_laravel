@@ -13,12 +13,12 @@
 
 @if($sidebar)
     <a
-        {{ $attributes->class('flex h-10 min-w-0 items-center justify-center in-data-flux-sidebar-collapsed-desktop:w-full') }}
+        {{ $attributes->class('flex h-10 min-w-0 items-center justify-center in-data-ui-sidebar-collapsed-desktop:w-full') }}
         aria-label="{{ $appName }}"
     >
         <span
             data-test="sidebar-full-logo"
-            class="block h-10 w-auto in-data-flux-sidebar-collapsed-desktop:hidden"
+            class="block h-10 w-auto in-data-ui-sidebar-collapsed-desktop:hidden"
         >
             @if($logoLight || $logoDark)
                 @if($logoLight)
@@ -37,7 +37,7 @@
         <span
             data-test="sidebar-collapsed-logo"
             title="{{ $appName }}"
-            class="hidden size-10 in-data-flux-sidebar-collapsed-desktop:flex items-center justify-center"
+            class="hidden size-10 in-data-ui-sidebar-collapsed-desktop:flex items-center justify-center"
         >
             @if($iconLight || $iconDark)
                 @if($iconLight)
@@ -52,7 +52,7 @@
         </span>
     </a>
 @else
-    <flux:brand name="{{ $appName }}" {{ $attributes }}>
+    <x-ui.brand name="{{ $appName }}" {{ $attributes }}>
         <x-slot name="logo" class="flex aspect-square size-8 items-center justify-center rounded-md bg-accent-content text-accent-foreground">
             @if($iconLight || $iconDark)
                 @if($iconLight)
@@ -65,5 +65,5 @@
                 <div class="size-8 bg-zinc-900 dark:bg-white text-white dark:text-black rounded-lg flex items-center justify-center font-bold text-lg">{{ substr($appName, 0, 1) }}</div>
             @endif
         </x-slot>
-    </flux:brand>
+    </x-ui.brand>
 @endif

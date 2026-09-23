@@ -40,14 +40,6 @@
         ],
         [
             'type' => 'link',
-            'label' => __('Media'),
-            'route' => 'mediamanager.index',
-            'match' => 'mediamanager.*',
-            'icon' => 'photo',
-            'visible' => auth()->user()->hasRole(['admin', 'super_admin']),
-        ],
-        [
-            'type' => 'link',
             'label' => __('Question Create'),
             'route' => 'question.set-create',
             'match' => 'question.set-create',
@@ -278,32 +270,28 @@
         settingsOpen: false,
         helpOpen: false,
         defaultTheme: '{{ strtolower(\App\Support\SettingsStore::group('branding')['default_theme'] ?? 'system') }}',
-        mode: localStorage.getItem('flux.appearance') || localStorage.getItem('theme') || '{{ strtolower(\App\Support\SettingsStore::group('branding')['default_theme'] ?? 'system') }}',
+        mode: localStorage.getItem('app.appearance') || localStorage.getItem('theme') || '{{ strtolower(\App\Support\SettingsStore::group('branding')['default_theme'] ?? 'system') }}',
         applyAppearance(selected) {
             this.mode = selected;
 
-            if (this.$flux) {
-                this.$flux.appearance = selected;
-            }
-
             if (selected === 'dark') {
                 localStorage.setItem('theme', 'dark');
-                localStorage.setItem('flux.appearance', 'dark');
+                localStorage.setItem('app.appearance', 'dark');
                 document.documentElement.classList.add('dark');
             } else if (selected === 'light') {
                 localStorage.setItem('theme', 'light');
-                localStorage.setItem('flux.appearance', 'light');
+                localStorage.setItem('app.appearance', 'light');
                 document.documentElement.classList.remove('dark');
             } else {
                 localStorage.removeItem('theme');
-                localStorage.setItem('flux.appearance', 'system');
+                localStorage.setItem('app.appearance', 'system');
                 document.documentElement.classList.toggle('dark', window.matchMedia('(prefers-color-scheme: dark)').matches);
             }
 
             window.dispatchEvent(new CustomEvent('theme-changed', { detail: { theme: selected } }));
         },
         init() {
-            if (!localStorage.getItem('flux.appearance') && !localStorage.getItem('theme')) {
+            if (!localStorage.getItem('app.appearance') && !localStorage.getItem('theme')) {
                 this.applyAppearance(this.defaultTheme);
             }
         }
@@ -312,75 +300,75 @@
     class="min-h-screen bg-white dark:bg-zinc-800"
 >
 
-<flux:header sticky collapsible="mobile" class="bg-zinc-50 dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-700">
-    <flux:sidebar.toggle class="lg:hidden" icon="bars-2" inset="left" />
+<x-ui.header sticky collapsible="mobile" class="bg-zinc-50 dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-700">
+    <x-ui.sidebar.toggle class="lg:hidden" icon="bars-2" inset="left" />
 
-    <flux:navbar class="-mb-px max-lg:hidden">
-        <flux:navbar.item icon="inbox" badge="12" href="#">{{ __('Inbox') }}</flux:navbar.item>
-        <flux:separator vertical variant="subtle" class="my-2"/>
-        <flux:dropdown class="max-lg:hidden">
-            <flux:navbar.item icon:trailing="chevron-down">{{__('Favorites')}}</flux:navbar.item>
-            <flux:navmenu>
-                <flux:navmenu.item href="#">{{__('Marketing site')}}</flux:navmenu.item>
-                <flux:navmenu.item href="#">{{__('Android app')}}</flux:navmenu.item>
-                <flux:navmenu.item href="#">{{ __('Brand guidelines') }}</flux:navmenu.item>
-            </flux:navmenu>
-        </flux:dropdown>
-    </flux:navbar>
-    <flux:spacer />
-    <flux:navbar class="me-4">
-        <flux:navbar.item icon="magnifying-glass" href="#" label="Search" />
-        <flux:navbar.item icon="globe-alt" :href="route('home')" target="_blank" label="{{ __('Visit Website') }}" />
-        <flux:button type="button" variant="ghost" icon="cog-6-tooth" class="max-lg:hidden" x-on:click="settingsOpen = true" aria-label="{{ __('Open settings') }}" />
+    <x-ui.navbar class="-mb-px max-lg:hidden">
+        <x-ui.navbar.item icon="inbox" badge="12" href="#">{{ __('Inbox') }}</x-ui.navbar.item>
+        <x-ui.separator vertical variant="subtle" class="my-2"/>
+        <x-ui.dropdown class="max-lg:hidden">
+            <x-ui.navbar.item icon:trailing="chevron-down">{{__('Favorites')}}</x-ui.navbar.item>
+            <x-ui.navmenu>
+                <x-ui.navmenu.item href="#">{{__('Marketing site')}}</x-ui.navmenu.item>
+                <x-ui.navmenu.item href="#">{{__('Android app')}}</x-ui.navmenu.item>
+                <x-ui.navmenu.item href="#">{{ __('Brand guidelines') }}</x-ui.navmenu.item>
+            </x-ui.navmenu>
+        </x-ui.dropdown>
+    </x-ui.navbar>
+    <x-ui.spacer />
+    <x-ui.navbar class="me-4">
+        <x-ui.navbar.item icon="magnifying-glass" href="#" label="Search" />
+        <x-ui.navbar.item icon="globe-alt" :href="route('home')" target="_blank" label="{{ __('Visit Website') }}" />
+        <x-ui.button type="button" variant="ghost" icon="cog-6-tooth" class="max-lg:hidden" x-on:click="settingsOpen = true" aria-label="{{ __('Open settings') }}" />
 
         <!-- Theme Toggle -->
-        <flux:button type="button" variant="ghost" x-on:click="applyAppearance(mode === 'dark' ? 'light' : 'dark')" aria-label="{{ __('Toggle dark mode') }}">
-            <flux:icon.moon x-show="mode !== 'dark'" class="size-5" />
-            <flux:icon.sun x-show="mode === 'dark'" x-cloak class="size-5" />
-        </flux:button>
-    </flux:navbar>
+        <x-ui.button type="button" variant="ghost" x-on:click="applyAppearance(mode === 'dark' ? 'light' : 'dark')" aria-label="{{ __('Toggle dark mode') }}">
+            <x-ui.icon.moon x-show="mode !== 'dark'" class="size-5" />
+            <x-ui.icon.sun x-show="mode === 'dark'" x-cloak class="size-5" />
+        </x-ui.button>
+    </x-ui.navbar>
 
-    <flux:dropdown align="end">
-        <button type="button" class="group flex items-center rounded-full bg-zinc-100/80 dark:bg-zinc-800 p-1 hover:bg-zinc-200/50 dark:hover:bg-zinc-700/50 transition" data-flux-profile>
-            <flux:avatar :initials="auth()->user()->initials()" :src="filled(auth()->user()->picture) ? asset('storage/' . auth()->user()->picture) : null" size="sm" />
+    <x-ui.dropdown align="end">
+        <button type="button" class="group flex items-center rounded-full bg-zinc-100/80 dark:bg-zinc-800 p-1 hover:bg-zinc-200/50 dark:hover:bg-zinc-700/50 transition" data-ui-profile>
+            <x-ui.avatar :initials="auth()->user()->initials()" :src="filled(auth()->user()->picture) ? asset('storage/' . auth()->user()->picture) : null" size="sm" />
             @if(auth()->user()->isAdmin())
                 <div class="px-2 hidden sm:flex items-center gap-1 text-xs font-bold text-indigo-500">
-                    <flux:icon.shield-check class="size-3" /> Admin
+                    <x-ui.icon.shield-check class="size-3" /> Admin
                 </div>
             @elseif(auth()->user()->hasActiveSubscription())
                 <div class="px-2 hidden sm:flex items-center gap-1 text-xs font-bold text-amber-500">
-                    <flux:icon.sparkles class="size-3" /> Pro
+                    <x-ui.icon.sparkles class="size-3" /> Pro
                 </div>
             @endif
         </button>
 
-        <flux:menu class="min-w-72">
+        <x-ui.menu class="min-w-72">
             <div class="px-3 py-3">
                 <div class="flex items-start gap-3">
                     <div class="min-w-0 flex-1">
-                        <flux:heading class="truncate">{{ auth()->user()->name }}</flux:heading>
-                        <flux:text size="sm" class="truncate">{{ auth()->user()->email }}</flux:text>
+                        <x-ui.heading class="truncate">{{ auth()->user()->name }}</x-ui.heading>
+                        <x-ui.text size="sm" class="truncate">{{ auth()->user()->email }}</x-ui.text>
                         <div class="mt-2 flex flex-wrap gap-1.5"></div>
                     </div>
                 </div>
             </div>
 
-            <flux:menu.separator />
+            <x-ui.menu.separator />
 
-            <flux:menu.item :href="route('profile.edit')" icon="user">
+            <x-ui.menu.item :href="route('profile.edit')" icon="user">
                 {{ __('Profile Settings') }}
-            </flux:menu.item>
-            <flux:menu.item :href="route('security.edit')" icon="shield-check">
+            </x-ui.menu.item>
+            <x-ui.menu.item :href="route('security.edit')" icon="shield-check">
                 {{ __('Security') }}
-            </flux:menu.item>
-            <flux:menu.item :href="route('appearance.edit')" icon="paint-brush">
+            </x-ui.menu.item>
+            <x-ui.menu.item :href="route('appearance.edit')" icon="paint-brush">
                 {{ __('Appearance') }}
-            </flux:menu.item>
-            <flux:menu.item icon="cog-6-tooth" x-on:click="settingsOpen = true">
+            </x-ui.menu.item>
+            <x-ui.menu.item icon="cog-6-tooth" x-on:click="settingsOpen = true">
                 {{ __('Quick Settings') }}
-            </flux:menu.item>
+            </x-ui.menu.item>
 
-            <flux:menu.separator />
+            <x-ui.menu.separator />
 
             <form method="POST" action="{{ route('logout') }}" class="w-full">
                 @csrf
@@ -389,125 +377,125 @@
                     class="flex w-full items-center gap-2 rounded-md px-3 py-2 text-left text-sm text-red-600 transition hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-950/30"
                     data-test="logout-button"
                 >
-                    <flux:icon.arrow-right-start-on-rectangle class="size-4" />
+                    <x-ui.icon.arrow-right-start-on-rectangle class="size-4" />
                     <span>{{ __('Log out') }}</span>
                 </button>
             </form>
-        </flux:menu>
-    </flux:dropdown>
-</flux:header>
+        </x-ui.menu>
+    </x-ui.dropdown>
+</x-ui.header>
 
-<flux:sidebar sticky collapsible class="min-h-dvh border-e border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
-    <flux:sidebar.header class="sticky top-0 z-20 bg-zinc-50 dark:bg-zinc-900">
+<x-ui.sidebar sticky collapsible class="min-h-dvh border-e border-zinc-200 bg-zinc-50 dark:border-zinc-700 dark:bg-zinc-900">
+    <x-ui.sidebar.header class="sticky top-0 z-20 bg-zinc-50 dark:bg-zinc-900">
         <x-app-logo :sidebar="true" href="{{ route('dashboard') }}" />
-        <flux:sidebar.collapse class="in-data-flux-sidebar-on-desktop:not-in-data-flux-sidebar-collapsed-desktop:-mr-2" />
-    </flux:sidebar.header>
+        <x-ui.sidebar.collapse class="in-data-ui-sidebar-on-desktop:not-in-data-ui-sidebar-collapsed-desktop:-mr-2" />
+    </x-ui.sidebar.header>
 
-    <flux:sidebar.nav>
+    <x-ui.sidebar.nav>
         <!-- Dynamic Menu Loop -->
         @foreach($menuItems as $item)
             @if($item['visible'])
 
                 @if($item['type'] === 'link')
                     @if($item['icon'] === 'custom-omr-frame')
-                        <flux:sidebar.item :href="route($item['route'])" :current="request()->routeIs($item['match'])">
+                        <x-ui.sidebar.item :href="route($item['route'])" :current="request()->routeIs($item['match'])">
                             <x-slot:icon>
                                 <x-omr-icon class="size-5 text-zinc-500 group-hover:text-emerald-600" />
                             </x-slot:icon>
                             {{ $item['label'] }}
-                        </flux:sidebar.item>
+                        </x-ui.sidebar.item>
                     @else
-                        <flux:sidebar.item :icon="$item['icon']" :href="route($item['route'])" :current="request()->routeIs($item['match'])">
+                        <x-ui.sidebar.item :icon="$item['icon']" :href="route($item['route'])" :current="request()->routeIs($item['match'])">
                             {{ $item['label'] }}
-                        </flux:sidebar.item>
+                        </x-ui.sidebar.item>
                     @endif
 
                 @elseif($item['type'] === 'group')
-                    <flux:sidebar.group expandable :icon="$item['icon']" :heading="$item['label']" :expanded="$item['active']" >
+                    <x-ui.sidebar.group expandable :icon="$item['icon']" :heading="$item['label']" :expanded="$item['active']" >
                         <div class="flex flex-col w-full ">
                             @foreach($item['items'] as $subItem)
                             @if($subItem['visible'])
-                                <flux:sidebar.item
+                                <x-ui.sidebar.item
                                     :icon="$subItem['icon'] ?? null"
                                     :href="route($subItem['route'])"
                                     :current="filled($subItem['match']) ? request()->routeIs($subItem['match']) : false"
-                                   
+
                                 >
                                     {{ $subItem['label'] }}
-                                </flux:sidebar.item>
+                                </x-ui.sidebar.item>
                             @endif
                         @endforeach
                         </div>
-                    </flux:sidebar.group>
+                    </x-ui.sidebar.group>
                 @endif
 
             @endif
         @endforeach
-    </flux:sidebar.nav>
+    </x-ui.sidebar.nav>
 
-    <flux:spacer />
+    <x-ui.spacer />
 
     <div class="sticky bottom-0 z-20 bg-zinc-50 dark:bg-zinc-900 pt-2 pb-1 border-t border-zinc-200/80 dark:border-zinc-700/80 mt-2">
         <x-desktop-user-menu class="hidden lg:block" :name="auth()->user()->name" />
     </div>
-</flux:sidebar>
+</x-ui.sidebar>
 
 <!-- Mobile User Menu -->
-<flux:header class="hidden">
-    <flux:sidebar.toggle class="hidden" icon="bars-2" inset="left" />
+<x-ui.header class="hidden">
+    <x-ui.sidebar.toggle class="hidden" icon="bars-2" inset="left" />
 
-    <flux:spacer />
+    <x-ui.spacer />
 
     <!-- Mobile Theme Toggle -->
-    <flux:button type="button" variant="ghost" x-on:click="applyAppearance(mode === 'dark' ? 'light' : 'dark')" aria-label="{{ __('Toggle dark mode') }}" class="mr-2">
-        <flux:icon.moon x-show="mode !== 'dark'" class="size-5" />
-        <flux:icon.sun x-show="mode === 'dark'" x-cloak class="size-5" />
-    </flux:button>
+    <x-ui.button type="button" variant="ghost" x-on:click="applyAppearance(mode === 'dark' ? 'light' : 'dark')" aria-label="{{ __('Toggle dark mode') }}" class="mr-2">
+        <x-ui.icon.moon x-show="mode !== 'dark'" class="size-5" />
+        <x-ui.icon.sun x-show="mode === 'dark'" x-cloak class="size-5" />
+    </x-ui.button>
 
-    <flux:dropdown position="top" align="end">
-        <button type="button" class="group flex items-center rounded-full bg-zinc-100/80 dark:bg-zinc-800 p-1 hover:bg-zinc-200/50 dark:hover:bg-zinc-700/50 transition" data-flux-profile>
-            <flux:avatar :initials="auth()->user()->initials()" size="sm" />
+    <x-ui.dropdown position="top" align="end">
+        <button type="button" class="group flex items-center rounded-full bg-zinc-100/80 dark:bg-zinc-800 p-1 hover:bg-zinc-200/50 dark:hover:bg-zinc-700/50 transition" data-ui-profile>
+            <x-ui.avatar :initials="auth()->user()->initials()" size="sm" />
             @if(auth()->user()->isAdmin())
                 <div class="px-2 flex items-center gap-1 text-xs font-bold text-indigo-500">
-                    <flux:icon.shield-check class="size-3" /> Admin
+                    <x-ui.icon.shield-check class="size-3" /> Admin
                 </div>
             @elseif(auth()->user()->hasActiveSubscription())
                 <div class="px-2 flex items-center gap-1 text-xs font-bold text-amber-500">
-                    <flux:icon.sparkles class="size-3" /> Pro
+                    <x-ui.icon.sparkles class="size-3" /> Pro
                 </div>
             @endif
         </button>
 
-        <flux:menu>
-            <flux:menu.radio.group>
+        <x-ui.menu>
+            <x-ui.menu.radio.group>
                 <div class="p-0 text-sm font-normal">
                     <div class="flex items-center gap-2 px-1 py-1.5 text-start text-sm">
-                        <flux:avatar
+                        <x-ui.avatar
                             :name="auth()->user()->name"
                             :initials="auth()->user()->initials()"
                         />
 
                         <div class="grid flex-1 text-start text-sm leading-tight">
-                            <flux:heading class="truncate">{{ auth()->user()->name }}</flux:heading>
-                            <flux:text class="truncate">{{ auth()->user()->email }}</flux:text>
+                            <x-ui.heading class="truncate">{{ auth()->user()->name }}</x-ui.heading>
+                            <x-ui.text class="truncate">{{ auth()->user()->email }}</x-ui.text>
                         </div>
                     </div>
                 </div>
-            </flux:menu.radio.group>
+            </x-ui.menu.radio.group>
 
-            <flux:menu.separator />
+            <x-ui.menu.separator />
 
-            <flux:menu.radio.group>
-                <flux:menu.item :href="route('profile.edit')" icon="cog">
+            <x-ui.menu.radio.group>
+                <x-ui.menu.item :href="route('profile.edit')" icon="cog">
                     {{ __('Settings') }}
-                </flux:menu.item>
-            </flux:menu.radio.group>
+                </x-ui.menu.item>
+            </x-ui.menu.radio.group>
 
-            <flux:menu.separator />
+            <x-ui.menu.separator />
 
             <form method="POST" action="{{ route('logout') }}" class="w-full">
                 @csrf
-                <flux:menu.item
+                <x-ui.menu.item
                     as="button"
                     type="submit"
                     icon="arrow-right-start-on-rectangle"
@@ -515,25 +503,43 @@
                     data-test="logout-button"
                 >
                     {{ __('Log out') }}
-                </flux:menu.item>
+                </x-ui.menu.item>
             </form>
-        </flux:menu>
-    </flux:dropdown>
-</flux:header>
+        </x-ui.menu>
+    </x-ui.dropdown>
+</x-ui.header>
 
 
 {{ $slot }}
 
-@persist('toast')
-<flux:toast />
-@endpersist
+
+<x-ui.toast />
+
+@if(session('toast'))
+    <script>
+        document.addEventListener('DOMContentLoaded', () => window.AppUI.toast(@json([
+            'text' => session('toast.message'),
+            'heading' => session('toast.heading'),
+            'variant' => session('toast.variant'),
+        ])));
+    </script>
+@endif
+
+@if(session('page_event'))
+    <script>
+        document.addEventListener('DOMContentLoaded', () => window.dispatchEvent(new CustomEvent(
+            @json(session('page_event.name')),
+            { detail: @json(session('page_event.detail')) },
+        )));
+    </script>
+@endif
 
 <x-delete-confirmation />
 
-@fluxScripts
+
 @stack('scripts')
-@include('mediamanager::partials.scripts')
-@include('mediamanager::includes.media-modal')
+
+
 
 @php
     $tracking = \App\Support\SettingsStore::group('tracking');

@@ -1,15 +1,15 @@
-<flux:modal name="delete-confirmation" class="w-full max-w-md">
+<x-ui.modal name="delete-confirmation" class="w-full max-w-md">
     <div class="space-y-4">
         <div>
-            <flux:heading size="lg">Delete this item?</flux:heading>
-            <flux:text class="mt-2">This action cannot be undone.</flux:text>
+            <x-ui.heading size="lg">Delete this item?</x-ui.heading>
+            <x-ui.text class="mt-2">This action cannot be undone.</x-ui.text>
         </div>
 
         <div class="flex justify-end gap-2">
-            <flux:modal.close>
-                <flux:button variant="ghost">Cancel</flux:button>
-            </flux:modal.close>
-            <flux:button variant="primary" icon="trash" x-on:click="window.confirmPendingDeletion()">Delete</flux:button>
+            <x-ui.modal.close>
+                <x-ui.button variant="ghost">Cancel</x-ui.button>
+            </x-ui.modal.close>
+            <x-ui.button variant="primary" icon="trash" x-on:click="window.confirmPendingDeletion()">Delete</x-ui.button>
         </div>
     </div>
-</flux:modal>
+</x-ui.modal>
