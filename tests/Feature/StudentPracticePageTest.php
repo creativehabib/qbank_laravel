@@ -1,13 +1,13 @@
 <?php
 
-use App\Livewire\Students\PracticeIndex;
+use App\Http\Controllers\Pages\Students\PracticeIndex;
 use App\Models\AcademicClass;
 use App\Models\Chapter;
 use App\Models\Question;
 use App\Models\Subject;
 use App\Models\User;
 use Illuminate\Support\Str;
-use Livewire\Livewire;
+use Tests\Support\PageTest;
 
 test('student can access practice page and see class folders', function () {
     $student = User::factory()->create();
@@ -24,7 +24,7 @@ test('student can access practice page and see class folders', function () {
     $this->actingAs($student)
         ->get(route('students.practice.index'))
         ->assertOk()
-        ->assertSeeLivewire(PracticeIndex::class)
+        ->assertSee(PracticeIndex::class)
         ->assertSee('Select Topics for Practice')
         ->assertSee($class->name);
 });
@@ -89,7 +89,7 @@ test('subject list is shown after opening a class folder', function () {
         ],
     ]);
 
-    Livewire::actingAs($student)
+    PageTest::actingAs($student)
         ->test(PracticeIndex::class)
         ->call('openClass', $classTen->id)
         ->assertSee('গণিত')
@@ -113,7 +113,7 @@ test('chapter list is shown after opening a subject folder', function () {
         'uuid' => (string) Str::uuid(),
         'academic_class_id' => $classTen->id,
         'name' => 'গণিত',
-        'slug' => 'gonit-livewire',
+        'slug' => 'gonit-page-controller',
         'order_sequence' => 1,
         'is_active' => true,
         'is_premium' => false,
@@ -158,7 +158,7 @@ test('chapter list is shown after opening a subject folder', function () {
         ],
     ]);
 
-    Livewire::actingAs($student)
+    PageTest::actingAs($student)
         ->test(PracticeIndex::class)
         ->call('openClass', $classTen->id)
         ->call('openSubject', $subject->id)
@@ -240,7 +240,7 @@ test('latest mcq questions are shown after opening a chapter folder', function (
         ],
     ]);
 
-    Livewire::actingAs($student)
+    PageTest::actingAs($student)
         ->test(PracticeIndex::class)
         ->call('openClass', $classTen->id)
         ->call('openSubject', $subject->id)
@@ -306,7 +306,7 @@ test('subject start action opens first active chapter questions directly', funct
         ],
     ]);
 
-    Livewire::actingAs($student)
+    PageTest::actingAs($student)
         ->test(PracticeIndex::class)
         ->call('openClass', $classTen->id)
         ->call('startSubjectPractice', $subject->id)
@@ -377,7 +377,7 @@ test('mcq question list shows pagination after 20 questions', function () {
         ]);
     }
 
-    Livewire::actingAs($student)
+    PageTest::actingAs($student)
         ->test(PracticeIndex::class)
         ->call('openClass', $classTen->id)
         ->call('openSubject', $subject->id)

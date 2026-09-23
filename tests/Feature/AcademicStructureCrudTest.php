@@ -1,15 +1,15 @@
 <?php
 
-use App\Livewire\AcademicClasses\ClassIndex;
+use App\Http\Controllers\Pages\AcademicClasses\ClassIndex;
 use App\Models\AcademicClass;
 use App\Models\Chapter;
 use App\Models\Subject;
 use App\Models\Topic;
 use Illuminate\Support\Str;
-use Livewire\Livewire;
+use Tests\Support\PageTest;
 
-test('academic structure can be created from a single livewire page', function () {
-    Livewire::test(ClassIndex::class)
+test('academic structure can be created from a single page controller page', function () {
+    PageTest::test(ClassIndex::class)
         ->set('class_name', 'HSC')
         ->set('class_description', 'Higher Secondary')
         ->call('saveClass')
@@ -19,7 +19,7 @@ test('academic structure can be created from a single livewire page', function (
 
     expect($academicClass)->not->toBeNull();
 
-    Livewire::test(ClassIndex::class)
+    PageTest::test(ClassIndex::class)
         ->set('subject_academic_class_id', $academicClass->id)
         ->set('subject_name', 'Physics')
         ->set('subject_code', '174')
@@ -30,7 +30,7 @@ test('academic structure can be created from a single livewire page', function (
 
     expect($subject)->not->toBeNull();
 
-    Livewire::test(ClassIndex::class)
+    PageTest::test(ClassIndex::class)
         ->set('chapter_subject_id', $subject->id)
         ->set('chapter_name', 'Motion')
         ->set('chapter_no', '1')
@@ -41,7 +41,7 @@ test('academic structure can be created from a single livewire page', function (
 
     expect($chapter)->not->toBeNull();
 
-    Livewire::test(ClassIndex::class)
+    PageTest::test(ClassIndex::class)
         ->set('topic_chapter_id', $chapter->id)
         ->set('topic_name', 'Velocity')
         ->call('saveTopic')
@@ -96,10 +96,10 @@ test('academic structure records can be deleted from the page', function () {
         'is_premium' => false,
     ]);
 
-    Livewire::test(ClassIndex::class)->call('deleteTopic', $topic->id);
-    Livewire::test(ClassIndex::class)->call('deleteChapter', $chapter->id);
-    Livewire::test(ClassIndex::class)->call('deleteSubject', $subject->id);
-    Livewire::test(ClassIndex::class)->call('deleteClass', $academicClass->id);
+    PageTest::test(ClassIndex::class)->call('deleteTopic', $topic->id);
+    PageTest::test(ClassIndex::class)->call('deleteChapter', $chapter->id);
+    PageTest::test(ClassIndex::class)->call('deleteSubject', $subject->id);
+    PageTest::test(ClassIndex::class)->call('deleteClass', $academicClass->id);
 
     expect(Topic::withTrashed()->find($topic->id)?->deleted_at)->not->toBeNull();
     expect(Chapter::withTrashed()->find($chapter->id)?->deleted_at)->not->toBeNull();
@@ -107,13 +107,13 @@ test('academic structure records can be deleted from the page', function () {
     expect(AcademicClass::withTrashed()->find($academicClass->id)?->deleted_at)->not->toBeNull();
 });
 
-test('academic class management uses Flux UI controls', function () {
-    $view = file_get_contents(base_path('resources/views/livewire/academic-classes/class-index.blade.php'));
+test('academic class management uses UI UI controls', function () {
+    $view = file_get_contents(base_path('resources/views/pages/academic-classes/class-index.blade.php'));
 
     expect($view)
-        ->toContain('<flux:modal')
-        ->toContain('<flux:input')
-        ->toContain('<flux:textarea')
-        ->toContain('<flux:checkbox')
-        ->toContain('<flux:button');
+        ->toContain('<x-ui.modal')
+        ->toContain('<x-ui.input')
+        ->toContain('<x-ui.textarea')
+        ->toContain('<x-ui.checkbox')
+        ->toContain('<x-ui.button');
 });

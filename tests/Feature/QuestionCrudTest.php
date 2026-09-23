@@ -1,7 +1,7 @@
 <?php
 
-use App\Livewire\Questions\Create;
-use App\Livewire\Questions\QuestionIndex;
+use App\Http\Controllers\Pages\Questions\Create;
+use App\Http\Controllers\Pages\Questions\QuestionIndex;
 use App\Models\AcademicClass;
 use App\Models\Chapter;
 use App\Models\ExamCategory;
@@ -10,9 +10,9 @@ use App\Models\Subject;
 use App\Models\Topic;
 use App\Models\User;
 use Illuminate\Support\Str;
-use Livewire\Livewire;
+use Tests\Support\PageTest;
 
-it('creates updates and deletes a question from the livewire crud screen', function () {
+it('creates updates and deletes a question from the page controller crud screen', function () {
     $teacher = User::factory()->teacher()->create();
     $admin = User::factory()->admin()->create();
 
@@ -62,7 +62,7 @@ it('creates updates and deletes a question from the livewire crud screen', funct
         'slug' => 'ssc',
     ]);
 
-    Livewire::actingAs($teacher)
+    PageTest::actingAs($teacher)
         ->test(QuestionIndex::class)
         ->set('subject_id', $subject->id)
         ->set('chapter_id', $chapter->id)
@@ -83,7 +83,7 @@ it('creates updates and deletes a question from the livewire crud screen', funct
     expect($question->slug)->toBe('what-is-x-if-x-2-5');
     expect($question->status)->toBe('pending');
 
-    Livewire::actingAs($admin)
+    PageTest::actingAs($admin)
         ->test(QuestionIndex::class)
         ->call('editQuestion', $question->id)
         ->set('title', 'Updated algebra question')
@@ -99,7 +99,7 @@ it('creates updates and deletes a question from the livewire crud screen', funct
     expect($question->marks)->toBe(2);
     expect($question->status)->toBe('active');
 
-    Livewire::actingAs($admin)
+    PageTest::actingAs($admin)
         ->test(QuestionIndex::class)
         ->call('deleteQuestion', $question->id);
 
@@ -109,12 +109,12 @@ it('creates updates and deletes a question from the livewire crud screen', funct
 it('applies border styles to slug difficulty type and marks inputs on create form', function () {
     $admin = User::factory()->admin()->create();
 
-    Livewire::actingAs($admin)
+    PageTest::actingAs($admin)
         ->test(Create::class)
         ->assertSeeHtml('id="slug_input"')
         ->assertSeeHtml('class="block w-full rounded-md border border-gray-300 shadow-sm sm:text-sm transition-colors dark:border-gray-600 dark:text-white"')
-        ->assertSeeHtml('wire:model="difficulty" class="block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 dark:bg-gray-700 dark:text-gray-200 appearance-none"')
-        ->assertSeeHtml('wire:model.live="question_type" class="block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 dark:bg-gray-700 dark:text-gray-200"')
-        ->assertSeeHtml('wire:model.live="marks"')
+        ->assertSeeHtml('data-page-model="difficulty" class="block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 dark:bg-gray-700 dark:text-gray-200 appearance-none"')
+        ->assertSeeHtml('data-page-model.live="question_type" class="block w-full rounded-md border border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 dark:bg-gray-700 dark:text-gray-200"')
+        ->assertSeeHtml('data-page-model.live="marks"')
         ->assertSeeHtml('class="block w-full rounded-md border border-gray-300 focus:border-indigo-500 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 dark:text-gray-200 pr-12"');
 });

@@ -14,7 +14,7 @@ export default defineConfig({
             ],
             refresh: [
                 'resources/views/**',
-                'app/Livewire/**',
+                'app/Http/Controllers/Pages/**',
                 'routes/**',
             ],
         }),

@@ -1,10 +1,10 @@
 <?php
 
-use App\Livewire\RolePermissionManager;
+use App\Http\Controllers\Pages\RolePermissionManager;
 use App\Models\Permission;
 use App\Models\Role;
 use App\Models\User;
-use Livewire\Livewire;
+use Tests\Support\PageTest;
 
 it('syncs role permissions via spatie pivot table', function () {
     $superAdmin = User::factory()->superAdmin()->create();
@@ -15,7 +15,7 @@ it('syncs role permissions via spatie pivot table', function () {
 
     $permissionIdsAsStrings = array_map(fn (int $permissionId): string => (string) $permissionId, $permissionIds);
 
-    Livewire::actingAs($superAdmin)
+    PageTest::actingAs($superAdmin)
         ->test(RolePermissionManager::class)
         ->set('roleName', 'Content Reviewer')
         ->set('selectedPermissions', $permissionIdsAsStrings)

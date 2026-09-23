@@ -1,14 +1,14 @@
 {
-  "_auto-render-C78d0Uld.js": {
-    "file": "assets/auto-render-C78d0Uld.js",
+  "_auto-render-J40KfJip.js": {
+    "file": "assets/auto-render-J40KfJip.js",
     "name": "auto-render",
     "imports": [
       "resources/js/frontend-app.js",
-      "_katex-CutmrFjt.js"
+      "_katex-BbBTMgtW.js"
     ]
   },
-  "_katex-CutmrFjt.js": {
-    "file": "assets/katex-CutmrFjt.js",
+  "_katex-BbBTMgtW.js": {
+    "file": "assets/katex-BbBTMgtW.js",
     "name": "katex",
     "imports": [
       "resources/js/frontend-app.js"
@@ -18,8 +18,8 @@
     "file": "assets/katex-DQeLlQKP.css",
     "src": "_katex-DQeLlQKP.css"
   },
-  "_katex.min-j8Vzr2rd.js": {
-    "file": "assets/katex.min-j8Vzr2rd.js",
+  "_katex.min-QRNaddaD.js": {
+    "file": "assets/katex.min-QRNaddaD.js",
     "name": "katex.min",
     "css": [
       "assets/katex-DQeLlQKP.css"
@@ -344,7 +344,7 @@
     "src": "node_modules/katex/dist/fonts/KaTeX_Typewriter-Regular.woff2"
   },
   "resources/css/app.css": {
-    "file": "assets/app-CyrB3PyD.css",
+    "file": "assets/app-R1uUuWdd.css",
     "name": "app",
     "names": [
       "app.css"
@@ -359,27 +359,27 @@
     ]
   },
   "resources/js/app.js": {
-    "file": "assets/app-DU9YgArC.js",
+    "file": "assets/app-C1CgVOGL.js",
     "name": "app",
     "src": "resources/js/app.js",
     "isEntry": true,
     "imports": [
-      "_katex.min-j8Vzr2rd.js",
-      "_auto-render-C78d0Uld.js",
-      "_katex-CutmrFjt.js"
+      "_katex.min-QRNaddaD.js",
+      "_auto-render-J40KfJip.js",
+      "_katex-BbBTMgtW.js"
     ]
   },
   "resources/js/frontend-app.js": {
-    "file": "assets/frontend-app-Dd0IMovl.js",
+    "file": "assets/frontend-app-DO3VOk-G.js",
     "name": "frontend-app",
     "src": "resources/js/frontend-app.js",
     "isEntry": true,
     "imports": [
-      "_katex.min-j8Vzr2rd.js"
+      "_katex.min-QRNaddaD.js"
     ],
     "dynamicImports": [
-      "_katex-CutmrFjt.js",
-      "_auto-render-C78d0Uld.js"
+      "_katex-BbBTMgtW.js",
+      "_auto-render-J40KfJip.js"
     ]
   }
 }

@@ -1,9 +1,9 @@
 <?php
 
-use App\Livewire\Admin\Settings\ThemeOptions;
+use App\Http\Controllers\Pages\Admin\Settings\ThemeOptions;
 use App\Models\Setting;
 use App\Models\User;
-use Livewire\Livewire;
+use Tests\Support\PageTest;
 
 it('authorized users can access theme options page', function () {
     $superAdmin = User::factory()->superAdmin()->create();
@@ -16,7 +16,7 @@ it('authorized users can access theme options page', function () {
 it('stores typography settings as separate keys with autoload flag', function () {
     $superAdmin = User::factory()->superAdmin()->create();
 
-    Livewire::actingAs($superAdmin)
+    PageTest::actingAs($superAdmin)
         ->test(ThemeOptions::class)
         ->set('primary_font', 'Poppins')
         ->set('primary_font_weights', '300;400;500;600;700')

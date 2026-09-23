@@ -292,7 +292,7 @@
 @vite(['resources/css/app.css', 'resources/js/frontend-app.js'])
 @stack('styles')
 
-<!-- Standalone Theme Manager (No Flux UI) -->
+<!-- Standalone Theme Manager (No UI) -->
 <script>
     // Global Event Delegation for Theme Toggle
     document.addEventListener('click', function(e) {

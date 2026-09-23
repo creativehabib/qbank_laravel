@@ -1,9 +1,9 @@
 <?php
 
-use App\Livewire\Tags\Index as TagIndex;
+use App\Http\Controllers\Pages\Tags\Index as TagIndex;
 use App\Models\Tag;
 use App\Models\User;
-use Livewire\Livewire;
+use Tests\Support\PageTest;
 
 it('allows user with tag permissions to access tags page', function () {
     $teacher = User::factory()->teacher()->create();
@@ -24,7 +24,7 @@ it('forbids user without tag permissions from accessing tags page', function () 
 it('allows user with tags.create permission to create a tag', function () {
     $teacher = User::factory()->teacher()->create();
 
-    Livewire::actingAs($teacher)
+    PageTest::actingAs($teacher)
         ->test(TagIndex::class)
         ->set('name', 'Physics')
         ->call('save')
@@ -36,7 +36,7 @@ it('allows user with tags.create permission to create a tag', function () {
 it('forbids tag creation without tags.create permission', function () {
     $student = User::factory()->create();
 
-    Livewire::actingAs($student)
+    PageTest::actingAs($student)
         ->test(TagIndex::class)
         ->set('name', 'Unauthorized Tag')
         ->call('save')
@@ -47,7 +47,7 @@ it('allows user with tags.update permission to update a tag', function () {
     $teacher = User::factory()->teacher()->create();
     $tag = Tag::query()->create(['name' => 'Old Tag']);
 
-    Livewire::actingAs($teacher)
+    PageTest::actingAs($teacher)
         ->test(TagIndex::class)
         ->call('edit', $tag->id)
         ->set('editingName', 'Updated Tag')
@@ -61,7 +61,7 @@ it('allows user with tags.delete permission to delete a tag', function () {
     $teacher = User::factory()->teacher()->create();
     $tag = Tag::query()->create(['name' => 'Delete Me']);
 
-    Livewire::actingAs($teacher)
+    PageTest::actingAs($teacher)
         ->test(TagIndex::class)
         ->call('delete', $tag->id)
         ->assertHasNoErrors();

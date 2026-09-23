@@ -1,0 +1,146 @@
+<?php
+
+namespace App\Http\Controllers\Pages\Teacher;
+
+use App\Http\Controllers\PageController;
+use App\Models\QuestionSet;
+use App\Support\Fonts;
+use Illuminate\Http\Request;
+
+class QuestionPaper extends PageController
+{
+    public $perPage = 10;
+
+    public QuestionSet $questionSet;
+
+    public $questions;
+
+    // Header Info
+    public $organizationName;
+
+    public $subject;
+
+    public $chapter;
+
+    public $topics;
+
+    // Formatting & Layout Properties
+    public string $fontFamily = 'Bangla';
+
+    public int $fontSize = 14;
+
+    public string $textAlign = 'justify';
+
+    public int $columnCount = 2;
+
+    public string $paperSize = 'A4';
+
+    public string $optionStyle = 'circle';
+
+    public string $setCode = 'ক';
+
+    // Watermark Properties (ছবি অনুযায়ী)
+    public int $watermarkOpacity = 20;
+
+    public int $watermarkSize = 30;
+
+    public string $watermarkText = 'অনলাইন ডিজিটাল স্কুল';
+
+    public array $previewOptions = [
+        'attachAnswerSheet' => false,
+        'attachOmrSheet' => false,
+        'markImportant' => false,
+        'showQuestionInfo' => true,
+        'showChapter' => true,
+        'showTopic' => false,
+        'showSetCode' => true,
+        'showStudentInfo' => false,
+        'showMarksBox' => false,
+        'showInstructions' => true,
+        'showNotice' => true,
+        'showExamName' => false,
+        'showColumnDivider' => true,
+        'showWatermark' => false, // Watermark toggle
+    ];
+
+    public function mount(Request $request)
+    {
+        $qsetId = $request->query('qset');
+
+        $this->questionSet = QuestionSet::with(['questions' => function ($query) {
+            $query->orderBy('pivot_order', 'asc');
+        }, 'user'])->findOrFail($qsetId);
+
+        // প্রশ্নগুলো আলাদা ভ্যারিয়েবলে স্টোর করা হলো যাতে শাফল করলে UI রি-রেন্ডার হয়
+        $this->questions = $this->questionSet->questions;
+
+        $this->subject = $this->questionSet->getRelatedSubject();
+        $this->chapter = $this->questionSet->getRelatedChapter();
+        $this->topics = $this->questionSet->getRelatedTopics();
+        $this->organizationName = $this->questionSet->user->organization_name ?? 'প্রতিষ্ঠানের নাম';
+
+        // ডিফল্ট ওয়াটারমার্ক টেক্সট
+        if (empty($this->watermarkText)) {
+            $this->watermarkText = $this->organizationName;
+        }
+    }
+
+    // --- Customization Methods ---
+    public function setTextAlign($align)
+    {
+        $this->textAlign = $align;
+    }
+
+    public function setColumnCount($count)
+    {
+        $this->columnCount = $count;
+    }
+
+    public function setPaperSize($size)
+    {
+        $this->paperSize = $size;
+    }
+
+    public function setOptionStyle($style)
+    {
+        $this->optionStyle = $style;
+    }
+
+    public function increaseFontSize()
+    {
+        if ($this->fontSize < 24) {
+            $this->fontSize++;
+        }
+    }
+
+    public function decreaseFontSize()
+    {
+        if ($this->fontSize > 10) {
+            $this->fontSize--;
+        }
+    }
+
+    // --- Shuffle & Set Code ---
+    public function shuffleQuestions()
+    {
+        // প্রশ্নগুলো এলোমেলো (Shuffle)
+        $this->questions = collect($this->questions)->shuffle();
+        $this->setCode = collect(['ক', 'খ', 'গ', 'ঘ'])
+            ->reject(fn ($c) => $c === $this->setCode)
+            ->random();
+    }
+
+    public function render()
+    {
+        return view('pages.teacher.question-paper', [
+            'fontOptions' => Fonts::options(),
+        ])->layout('layouts.app', ['title' => $this->organizationName]);
+    }
+
+    public function updatedFontFamily(string $value): void
+    {
+        if (! in_array($value, Fonts::keys(), true)) {
+            $this->fontFamily = 'Bangla';
+        }
+    }
+}

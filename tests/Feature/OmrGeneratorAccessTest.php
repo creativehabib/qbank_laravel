@@ -1,8 +1,8 @@
 <?php
 
-use App\Livewire\OmrGenerator;
+use App\Http\Controllers\Pages\OmrGenerator;
 use App\Models\User;
-use Livewire\Livewire;
+use Tests\Support\PageTest;
 
 it('allows teacher admin and super admin to access omr generator', function (string $state): void {
     $user = User::factory()->{$state}()->create();
@@ -10,7 +10,7 @@ it('allows teacher admin and super admin to access omr generator', function (str
     $this->actingAs($user)
         ->get(route('omr.generator'))
         ->assertOk()
-        ->assertSeeLivewire(OmrGenerator::class);
+        ->assertSee(OmrGenerator::class);
 })->with([
     'teacher',
     'admin',
@@ -48,7 +48,7 @@ it('does not show omr generator in sidebar for student', function (): void {
 it('supports dynamic omr settings updates', function (): void {
     $teacher = User::factory()->teacher()->create();
 
-    Livewire::actingAs($teacher)
+    PageTest::actingAs($teacher)
         ->test(OmrGenerator::class)
         ->set('schoolName', 'ডেমো স্কুল')
         ->set('address', 'ঢাকা')

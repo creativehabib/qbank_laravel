@@ -30,7 +30,7 @@
     function updateInstallButton() {
                 const desktopBtn = document.getElementById('installPwaBtn');
         const mobileBanner = document.getElementById('mobilePwaBanner');
-        
+
         if (window.deferredPrompt !== null) {
             if (desktopBtn) desktopBtn.classList.remove('hidden');
             if (mobileBanner) mobileBanner.classList.remove('hidden');

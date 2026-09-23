@@ -1,0 +1,3 @@
+@props(['label' => null, 'type' => 'text', 'name' => null, 'value' => null])
+@php($fieldName = $name ?: $attributes->get('data-page-model') ?: $attributes->get('data-page-model.live') ?: $attributes->get('data-page-model.defer'))
+<label class="block space-y-1">@if($label)<span class="block text-sm font-medium">{{ $label }}</span>@endif<input type="{{ $type }}" name="{{ $fieldName }}" value="{{ old($fieldName, $value) }}" {{ $attributes->except(['data-page-model', 'data-page-model.live', 'data-page-model.defer', 'label', 'viewable'])->merge(['class' => 'w-full rounded-lg border border-zinc-300 bg-white px-3 py-2 dark:border-zinc-700 dark:bg-zinc-900']) }}>@error($fieldName)<span class="text-sm text-red-600">{{ $message }}</span>@enderror</label>

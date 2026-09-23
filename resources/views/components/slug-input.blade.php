@@ -7,7 +7,7 @@
 <div x-data="{
     isSlugEditable: false,
     isManual: false,
-    slugText: $wire.entangle('{{ $property }}'),
+    slugText: $page.entangle('{{ $property }}'),
     checkStatus: '',
     errorMessage: '',
     typingTimer: null,
@@ -21,7 +21,7 @@
 
         this.checkStatus = 'checking';
 
-        $wire.validateSlug(this.slugText, '{{ $table }}', '{{ $ignoreId }}').then(result => {
+        $page.validateSlug(this.slugText, '{{ $table }}', '{{ $ignoreId }}').then(result => {
             if (result === true) {
                 this.checkStatus = 'available';
                 this.errorMessage = '';

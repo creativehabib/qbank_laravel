@@ -1,10 +1,10 @@
 <?php
 
-use App\Livewire\UserRoleManagement;
+use App\Http\Controllers\Pages\UserRoleManagement;
 use App\Models\Permission;
 use App\Models\Role;
 use App\Models\User;
-use Livewire\Livewire;
+use Tests\Support\PageTest;
 
 it('super admin can access user role management page', function () {
     $superAdmin = User::factory()->superAdmin()->create();
@@ -37,7 +37,7 @@ it('super admin can assign role to another user', function () {
     $targetUser = User::factory()->create();
     $teacherRoleId = Role::query()->where('name', 'teacher')->value('id');
 
-    Livewire::actingAs($superAdmin)
+    PageTest::actingAs($superAdmin)
         ->test(UserRoleManagement::class)
         ->call('editUser', $targetUser->id)
         ->set('selectedRole', (string) $teacherRoleId)
@@ -53,7 +53,7 @@ it('super admin can create a new user', function () {
     $superAdmin = User::factory()->superAdmin()->create();
     $teacherRoleId = Role::query()->where('name', 'teacher')->value('id');
 
-    Livewire::actingAs($superAdmin)
+    PageTest::actingAs($superAdmin)
         ->test(UserRoleManagement::class)
         ->call('createUser')
         ->set('name', 'Created User')
@@ -77,7 +77,7 @@ it('super admin can edit user profile details', function () {
     ]);
     $adminRoleId = Role::query()->where('name', 'admin')->value('id');
 
-    Livewire::actingAs($superAdmin)
+    PageTest::actingAs($superAdmin)
         ->test(UserRoleManagement::class)
         ->call('editUser', $targetUser->id)
         ->set('name', 'Updated User')
@@ -97,7 +97,7 @@ it('super admin can delete another user', function () {
     $superAdmin = User::factory()->superAdmin()->create();
     $targetUser = User::factory()->create();
 
-    Livewire::actingAs($superAdmin)
+    PageTest::actingAs($superAdmin)
         ->test(UserRoleManagement::class)
         ->call('deleteUser', $targetUser->id)
         ->assertHasNoErrors();
@@ -109,7 +109,7 @@ it('super admin cannot demote own role', function () {
     $superAdmin = User::factory()->superAdmin()->create();
     $adminRoleId = Role::query()->where('name', 'admin')->value('id');
 
-    Livewire::actingAs($superAdmin)
+    PageTest::actingAs($superAdmin)
         ->test(UserRoleManagement::class)
         ->call('editUser', $superAdmin->id)
         ->set('selectedRole', (string) $adminRoleId)

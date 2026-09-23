@@ -18,13 +18,13 @@
                 <ol class="inline-flex items-center space-x-1 md:space-x-2">
                     <li class="inline-flex items-center">
                         <a href="/" class="hover:text-emerald-600 flex items-center gap-1">
-                            <flux:icon.home class="w-3 h-3" /> হোম
+                            <x-ui.icon.home class="w-3 h-3" /> হোম
                         </a>
                     </li>
                     @if($question->subject)
                         <li>
                             <div class="flex items-center">
-                                <flux:icon.chevron-right class="w-3 h-3 mx-1" />
+                                <x-ui.icon.chevron-right class="w-3 h-3 mx-1" />
                                 <a href="{{ route('job-solutions.index', ['tab' => 'topics', 'subject' => $question->subject->slug]) }}" class="text-zinc-500 hover:text-emerald-600 transition-colors">{{ $question->subject->name }}</a>
                             </div>
                         </li>
@@ -32,7 +32,7 @@
                     @if($question->chapter)
                         <li>
                             <div class="flex items-center">
-                                <flux:icon.chevron-right class="w-3 h-3 mx-1" />
+                                <x-ui.icon.chevron-right class="w-3 h-3 mx-1" />
                                 <a href="{{ route('job-solutions.index', ['tab' => 'topics', 'subject' => $question->subject->slug, 'topic' => $question->chapter->slug]) }}" class="text-zinc-500 hover:text-emerald-600 transition-colors">{{ $question->chapter->name }}</a>
                             </div>
                         </li>
@@ -40,14 +40,14 @@
                     @if($question->topic)
                         <li>
                             <div class="flex items-center">
-                                <flux:icon.chevron-right class="w-3 h-3 mx-1" />
+                                <x-ui.icon.chevron-right class="w-3 h-3 mx-1" />
                                 <a href="{{ route('job-solutions.index', ['tab' => 'topics', 'subject' => $question->subject->slug, 'topic' => $question->chapter->slug, 'sub_topic' => $question->topic->slug]) }}" class="text-zinc-500 hover:text-emerald-600 transition-colors">{{ $question->topic->name }}</a>
                             </div>
                         </li>
                     @endif
                     <li>
                         <div class="flex items-center">
-                            <flux:icon.chevron-right class="w-3 h-3 mx-1" />
+                            <x-ui.icon.chevron-right class="w-3 h-3 mx-1" />
                             <span class="text-zinc-700 dark:text-zinc-300 line-clamp-1 max-w-xs tex2jax_process" data-math-content>{!! strip_tags($question->title) !!}</span>
                         </div>
                     </li>
@@ -107,7 +107,7 @@
                         <div class="mb-8">
                             <div class="flex items-center justify-between mb-4">
                                 <h3 class="text-xs font-bold text-zinc-600 dark:text-zinc-400 flex items-center gap-1.5">
-                                    <flux:icon.list-bullet class="w-4 h-4" /> অপশনসমূহ
+                                    <x-ui.icon.list-bullet class="w-4 h-4" /> অপশনসমূহ
                                 </h3>
                                 <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 dark:bg-emerald-900/30 px-2 py-0.5 rounded-full">সঠিক উত্তর চিহ্নিত</span>
                             </div>
@@ -147,28 +147,28 @@
 
                                 <button type="button" x-on:click="openDescription = !openDescription" class="inline-flex w-fit items-center gap-1 text-sm font-semibold text-zinc-500 hover:text-emerald-600 dark:text-zinc-400 dark:hover:text-emerald-400">
                                     <span>Explanation</span>
-                                    <flux:icon.chevron-down class="size-4 transition-transform" x-bind:class="openDescription ? 'rotate-180' : ''" />
+                                    <x-ui.icon.chevron-down class="size-4 transition-transform" x-bind:class="openDescription ? 'rotate-180' : ''" />
                                 </button>
 
                                 <div class="flex items-center gap-4 text-zinc-400 dark:text-zinc-500">
                                     <div class="flex items-center gap-1.5" title="Views">
-                                        <flux:icon.eye class="size-[18px]" />
+                                        <x-ui.icon.eye class="size-[18px]" />
                                         <span class="text-sm font-semibold text-zinc-500 dark:text-zinc-400">{{ $question->views_count ?? 0 }}</span>
                                     </div>
                                     <button type="button" class="cursor-pointer hover:text-emerald-600 dark:hover:text-emerald-400" title="Statistics">
-                                        <flux:icon.chart-pie class="size-[18px]" />
+                                        <x-ui.icon.chart-pie class="size-[18px]" />
                                     </button>
                                     <button type="button" class="cursor-pointer hover:text-emerald-600 dark:hover:text-emerald-400" title="Bookmark">
-                                        <flux:icon.bookmark class="size-[18px]" variant="outline" />
+                                        <x-ui.icon.bookmark class="size-[18px]" variant="outline" />
                                     </button>
                                     <button type="button" class="flex items-center gap-1 cursor-pointer hover:text-pink-500" title="Like">
-                                        <flux:icon.heart class="size-[18px]" variant="outline" />
+                                        <x-ui.icon.heart class="size-[18px]" variant="outline" />
                                     </button>
                                     <button type="button" class="cursor-pointer hover:text-amber-500 dark:hover:text-amber-400" title="Report">
-                                        <flux:icon.flag class="size-[18px]" />
+                                        <x-ui.icon.flag class="size-[18px]" />
                                     </button>
                                     <button type="button" class="cursor-pointer hover:text-blue-500 dark:hover:text-blue-400" title="Share">
-                                        <flux:icon.share class="size-[18px]" />
+                                        <x-ui.icon.share class="size-[18px]" />
                                     </button>
                                 </div>
                             </div>
@@ -181,7 +181,7 @@
                                 @else
                                     <div class="space-y-3 text-center">
                                         <div class="py-4">
-                                            <flux:icon.sparkles class="mx-auto size-6 text-violet-500 mb-2" />
+                                            <x-ui.icon.sparkles class="mx-auto size-6 text-violet-500 mb-2" />
                                             <p class="font-semibold text-zinc-600 dark:text-zinc-300">কোনো ব্যাখ্যা নেই</p>
                                         </div>
                                     </div>
@@ -196,21 +196,21 @@
                 <div class="flex flex-col sm:flex-row justify-between items-stretch sm:items-center gap-3 sm:gap-4">
                     @if($prevQuestion)
                         <a href="{{ route('question.show', $prevQuestion->slug) }}" class="justify-center px-4 md:px-5 py-2.5 rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900 text-sm font-bold text-zinc-600 dark:text-zinc-400 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors flex items-center gap-2 cursor-pointer">
-                            <flux:icon.chevron-left class="w-4 h-4" /> পূর্ববর্তী প্রশ্ন
+                            <x-ui.icon.chevron-left class="w-4 h-4" /> পূর্ববর্তী প্রশ্ন
                         </a>
                     @else
                         <div class="justify-center px-4 md:px-5 py-2.5 rounded-xl border border-zinc-100 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 text-sm font-bold text-zinc-400 dark:text-zinc-600 cursor-not-allowed flex items-center gap-2">
-                            <flux:icon.chevron-left class="w-4 h-4" /> পূর্ববর্তী প্রশ্ন
+                            <x-ui.icon.chevron-left class="w-4 h-4" /> পূর্ববর্তী প্রশ্ন
                         </div>
                     @endif
 
                     @if($nextQuestion)
                         <a href="{{ route('question.show', $nextQuestion->slug) }}" class="justify-center px-4 md:px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-bold shadow-md shadow-emerald-600/20 transition-colors flex items-center gap-2 cursor-pointer">
-                            পরবর্তী প্রশ্ন <flux:icon.chevron-right class="w-4 h-4" />
+                            পরবর্তী প্রশ্ন <x-ui.icon.chevron-right class="w-4 h-4" />
                         </a>
                     @else
                         <div class="justify-center px-4 md:px-5 py-2.5 rounded-xl bg-zinc-200 dark:bg-zinc-800 text-zinc-400 dark:text-zinc-600 text-sm font-bold cursor-not-allowed flex items-center gap-2">
-                            পরবর্তী প্রশ্ন <flux:icon.chevron-right class="w-4 h-4" />
+                            পরবর্তী প্রশ্ন <x-ui.icon.chevron-right class="w-4 h-4" />
                         </div>
                     @endif
                 </div>
@@ -256,7 +256,7 @@
                                     </h4>
                                     <div class="mt-2 text-[10px] text-zinc-400 font-medium flex justify-between items-center">
                                         <span>See ▾</span>
-                                        <flux:icon.arrow-right class="w-3 h-3 text-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity" />
+                                        <x-ui.icon.arrow-right class="w-3 h-3 text-emerald-500 opacity-0 group-hover:opacity-100 transition-opacity" />
                                     </div>
                                 </a>
                             @endforeach

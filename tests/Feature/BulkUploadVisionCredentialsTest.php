@@ -1,6 +1,6 @@
 <?php
 
-use App\Livewire\Questions\BulkUpload;
+use App\Http\Controllers\Pages\Questions\BulkUpload;
 
 it('throws a helpful error when google vision credentials are missing', function () {
     config()->set('services.google_vision.credentials', null);

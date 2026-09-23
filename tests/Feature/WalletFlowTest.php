@@ -1,10 +1,10 @@
 <?php
 
-use App\Livewire\Admin\WalletApprovalPanel;
-use App\Livewire\Teacher\WalletTransactions;
+use App\Http\Controllers\Pages\Admin\WalletApprovalPanel;
+use App\Http\Controllers\Pages\Teacher\WalletTransactions;
 use App\Models\User;
 use App\Models\Wallet;
-use Livewire\Livewire;
+use Tests\Support\PageTest;
 
 it('teacher can submit recharge request and admin can approve', function () {
     $teacher = User::factory()->teacher()->create();
@@ -13,7 +13,7 @@ it('teacher can submit recharge request and admin can approve', function () {
 
     $this->actingAs($teacher);
 
-    Livewire::test(WalletTransactions::class)
+    PageTest::test(WalletTransactions::class)
         ->set('activeTab', 'recharge')
         ->set('amount', 200)
         ->set('paymentMethod', 'bkash')
@@ -27,7 +27,7 @@ it('teacher can submit recharge request and admin can approve', function () {
 
     $this->actingAs($admin);
 
-    Livewire::test(WalletApprovalPanel::class)
+    PageTest::test(WalletApprovalPanel::class)
         ->call('approve', $transaction->id);
 
     $transaction->refresh();

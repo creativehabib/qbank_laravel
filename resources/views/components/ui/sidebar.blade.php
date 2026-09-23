@@ -1,0 +1,1 @@
+<aside {{ $attributes }}>{{ $slot }}</aside>

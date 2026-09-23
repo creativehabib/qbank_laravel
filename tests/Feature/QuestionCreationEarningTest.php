@@ -1,7 +1,7 @@
 <?php
 
-use App\Livewire\Questions;
-use App\Livewire\Questions\Create;
+use App\Http\Controllers\Pages\Questions;
+use App\Http\Controllers\Pages\Questions\Create;
 use App\Models\AcademicClass;
 use App\Models\Chapter;
 use App\Models\ExamCategory;
@@ -11,7 +11,7 @@ use App\Models\Topic;
 use App\Models\User;
 use App\Models\Wallet;
 use Illuminate\Support\Str;
-use Livewire\Livewire;
+use Tests\Support\PageTest;
 
 it('pays teacher only when admin approves the question and marks is_paid true', function () {
     $teacher = User::factory()->teacher()->create();
@@ -63,7 +63,7 @@ it('pays teacher only when admin approves the question and marks is_paid true', 
         'slug' => 'hsc',
     ]);
 
-    Livewire::actingAs($teacher)
+    PageTest::actingAs($teacher)
         ->test(Create::class)
         ->set('academic_class_id', $class->id)
         ->set('subject_id', $subject->id)
@@ -90,7 +90,7 @@ it('pays teacher only when admin approves the question and marks is_paid true', 
 
     expect(Wallet::query()->where('user_id', $teacher->id)->doesntExist())->toBeTrue();
 
-    Livewire::actingAs($admin)
+    PageTest::actingAs($admin)
         ->test(Questions::class)
         ->call('toggleQuestionStatus', $question->id)
         ->assertHasNoErrors();
@@ -102,7 +102,7 @@ it('pays teacher only when admin approves the question and marks is_paid true', 
         ->and($question->is_paid)->toBeTrue()
         ->and((float) $wallet->reward_balance)->toBe(10.0);
 
-    Livewire::actingAs($admin)
+    PageTest::actingAs($admin)
         ->test(Questions::class)
         ->call('toggleQuestionStatus', $question->id)
         ->assertHasNoErrors();
@@ -112,7 +112,7 @@ it('pays teacher only when admin approves the question and marks is_paid true', 
     expect($question->status)->toBe('pending')
         ->and($question->is_paid)->toBeTrue();
 
-    Livewire::actingAs($admin)
+    PageTest::actingAs($admin)
         ->test(Questions::class)
         ->call('toggleQuestionStatus', $question->id)
         ->assertHasNoErrors();

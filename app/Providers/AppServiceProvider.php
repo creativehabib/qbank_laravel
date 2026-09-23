@@ -10,11 +10,14 @@ use Illuminate\Auth\Events\Logout;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Facades\View;
+use Illuminate\Support\HtmlString;
+use Illuminate\View\View as LaravelView;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
 
@@ -92,10 +95,25 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        $this->configurePageViews();
         $this->configureDefaults();
         $this->shareThemeTypography();
         $this->configureDynamicSettings();
         $this->registerActivityLogListeners();
+    }
+
+    /**
+     * Provide full-page layouts and the small client-side bindings used by page controllers.
+     */
+    protected function configurePageViews(): void
+    {
+        LaravelView::macro('layout', function (string $layout, array $data = []): LaravelView {
+            /** @var LaravelView $this */
+            return view($layout, [...$data, 'slot' => new HtmlString($this->render())]);
+        });
+
+        Blade::directive('this', fn (): string => 'window.Page');
+        Blade::directive('entangle', fn (string $expression): string => "<?php echo json_encode(data_get(\$pageState ?? [], {$expression})); ?>");
     }
 
     /**

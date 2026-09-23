@@ -1,8 +1,8 @@
 <?php
 
-use App\Livewire\Teacher\OrganizationInfo;
+use App\Http\Controllers\Pages\Teacher\OrganizationInfo;
 use App\Models\User;
-use Livewire\Livewire;
+use Tests\Support\PageTest;
 
 it('teacher can update organization info from dashboard menu page', function () {
     $teacher = User::factory()->teacher()->create([
@@ -13,7 +13,7 @@ it('teacher can update organization info from dashboard menu page', function () 
 
     $this->actingAs($teacher);
 
-    Livewire::test(OrganizationInfo::class)
+    PageTest::test(OrganizationInfo::class)
         ->set('organizationName', 'Dhaka College')
         ->set('organizationType', 'College')
         ->set('organizationAddress', 'Dhaka, Bangladesh')

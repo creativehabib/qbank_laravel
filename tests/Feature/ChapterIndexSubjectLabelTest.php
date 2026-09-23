@@ -1,10 +1,10 @@
 <?php
 
-use App\Livewire\Chapters\ChapterIndex;
+use App\Http\Controllers\Pages\Chapters\ChapterIndex;
 use App\Models\AcademicClass;
 use App\Models\Subject;
 use Illuminate\Support\Str;
-use Livewire\Livewire;
+use Tests\Support\PageTest;
 
 it('shows subject name with class name in chapter subject dropdown', function () {
     $classNine = AcademicClass::query()->create([
@@ -51,7 +51,7 @@ it('shows subject name with class name in chapter subject dropdown', function ()
         'is_premium' => false,
     ]);
 
-    Livewire::test(ChapterIndex::class)
+    PageTest::test(ChapterIndex::class)
         ->assertSee('বাংলা (Class 9)')
         ->assertSee('বাংলা (Class 10)');
 });
@@ -89,7 +89,7 @@ it('does not allow creating a chapter with mismatched class and subject', functi
         'is_premium' => false,
     ]);
 
-    Livewire::test(ChapterIndex::class)
+    PageTest::test(ChapterIndex::class)
         ->set('academic_class_id', (string) $classTen->id)
         ->set('subject_id', (string) $subjectForClassNine->id)
         ->set('name', 'ব্যাকরণ')
